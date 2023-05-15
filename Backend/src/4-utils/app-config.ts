@@ -3,6 +3,12 @@ class AppConfig {
     // Server Port:
     public port = 4000;
 
+    // Server Url:
+    public serverUrl = "http://localhost:" + this.port + "/"
+
+    // Image Url: 
+    public imagesUrl = this.serverUrl + "api/vacations/images/"
+
     // Database Host (on which computer the database exists):
     public mySqlHost = "localhost";
 

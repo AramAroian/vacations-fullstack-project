@@ -7,9 +7,11 @@ interface VacationsCardProps {
 
 function VacationsCard(props: VacationsCardProps): JSX.Element {
   return (
-    <div className="VacationsCard">
+    <div className="VacationsCard box">
       <div className="card">
-        <img src={props.vacation.imageUrl} alt="Destination Image"></img>
+        <div className="image-container">
+          <img src={props.vacation.imageUrl} alt="Destination Image"></img>
+        </div>
         <div className="card-top-right">
           <button className="like-button">Like</button>
           <span className="like-count">0</span>
@@ -24,8 +26,8 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
           </div>
         </div>
         <div className="card-bottom">
-          <button className="purchase-button">Purchase Vacation</button>
-        </div>
+          <button className="purchase-button">Book Vacation</button>
+        </div> 
       </div>
     </div>
   );

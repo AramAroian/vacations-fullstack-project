@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import dataService from "../5-services/data-service";
 import VacationsModel from "../2-models/vacations-model";
 import UsersModel from "../2-models/users-model";
+import imageHandler from "../4-utils/image-handler";
 
 const router = express.Router();
 
@@ -64,5 +65,16 @@ router.delete("/vacations/:id", async (request: Request, response: Response, nex
     }
 });
 
+// Get image by imageName
+router.get("/vacations/images/:imageName", async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const imageName = request.params.imageName;
+        const imagePath = imageHandler.getImagePath(imageName);
+        response.sendFile(imagePath);
+    }
+    catch(err: any) {
+        next(err);
+    }
+});
 
 export default router;

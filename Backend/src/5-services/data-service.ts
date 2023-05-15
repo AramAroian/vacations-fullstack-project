@@ -2,10 +2,11 @@ import VacationsModel from "../2-models/vacations-model";
 import UsersModel from "../2-models/users-model";
 import dal from "../4-utils/dal";
 import { OkPacket } from "mysql";
+import appConfig from "../4-utils/app-config";
 
 
 async function getAllVacations(): Promise<[]> {
-    const sql = "SELECT * FROM vacations";
+    const sql = `SELECT vacations.*, CONCAT('${appConfig.imagesUrl}',imageName) AS imageUrl FROM vacations`;
     const vacations = await dal.execute(sql);
     return vacations;
 }
@@ -30,7 +31,7 @@ async function addAVacation(vacation: VacationsModel): Promise<VacationsModel> {
         vacation.startDate,
         vacation.endDate,
         vacation.price,
-        vacation.imageUrl
+        vacation.imageName
     ]);
     vacation.vacationsId = result.insertId;
     return vacation;

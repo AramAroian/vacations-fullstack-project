@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2023 at 06:46 PM
+-- Generation Time: May 15, 2023 at 07:16 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -70,9 +70,18 @@ CREATE TABLE `vacations` (
 --
 
 INSERT INTO `vacations` (`vacationsId`, `destination`, `description`, `startDate`, `endDate`, `price`, `imageName`) VALUES
-(1, 'Seychelles', 'Immerse yourself in a real paradise of green and blue and explore the little islands set in the Indian Ocean and their tropical flowers. At the heart of the Seychelles archipelago and a protected national marine park, the island of Saint Anne is home to a single and unique hotel: the Club Med Seychelles Resort. Adults and children will awaken their inner Robinson Crusoe on a holiday in total harmony with nature and where many of the activities are directly connected to the Indian Ocean and its sublimely beautiful scenery. Trekking, free diving and glass-bottomed kayaks are just some of the pleasures that can be shared, all designed to promote well-being and induce happiness in every member of the family. Turquoise waters, white sandy beaches edged with rocks, hills covered in lush vegetation - looks like you\'ve found the backdrop to your next holiday.', '2023-09-02', '2023-09-09', '1543.00', ''),
-(2, 'The Alps', 'The highest and most extensive mountains in Europe, the Alps are, without a doubt, the ideal location for memorable skiing holidays. But not only! Beyond winter sports, the Alps offer a spectacular backdrop for summer activities, Alpine villages with traditional woodworking, cheesemaking and strong cultural identity.', '2023-11-12', '2023-11-19', '1879.00', ''),
-(3, 'Sicily - Cefalù', 'Welcome to our first Exclusive Collection resort in Europe. Nestled atop picturesque sea cliffs, this luxury all-inclusive resort in Sicily enjoys breath-taking views overlooking Cefalù Bay. Step into a world of pure luxury, with activities and excursions specially designed to rejuvenate your spirit and dive into the Sicilian art de vivre. Stand-up paddle board across the ocean, relax with yoga on the sea, or explore seaside towns on a rented vespa. Return in the evening to enjoy our Sicily-inspired menu and watch the sunset with a glass of champagne.', '2023-05-04', '2023-05-07', '1522.00', '');
+(1, 'Budapest', 'Experience the beauty of Budapest, known as the \"Paris of the East.\" Admire the stunning architecture, soak in the thermal baths, and take a scenic cruise on the Danube River.', '2023-09-02', '2023-09-09', '1543.00', '073bf718-4d8e-4c85-99de-fe045c3d665e.jpg'),
+(2, 'Rome', 'Immerse yourself in the rich history of Rome, the \"Eternal City.\" Marvel at the Colosseum and ancient ruins, toss a coin in the Trevi Fountain, and savor the delicious Italian cuisine.', '2023-11-12', '2023-11-19', '1879.00', 'b8acfe6b-b7cc-41fc-a6d0-8fb5620a3168.jpg'),
+(3, 'Florence', 'Discover the art and culture of Florence, the birthplace of the Renaissance. Visit the Uffizi Gallery, climb to the top of the Duomo, and indulge in a traditional Tuscan meal.', '2023-05-04', '2023-05-07', '1522.00', 'c5b57076-f46d-4644-a718-a88ca5b24afb.jpg'),
+(4, 'Venice', 'Explore the magical city of Venice, built on a network of canals. Take a gondola ride, visit the stunning St. Mark\'s Basilica, and sample the local seafood.', '2023-08-15', '2023-08-22', '2350.00', 'f036075a-b620-46ad-aca6-56bcfff2d74a.jpg'),
+(5, 'Buenos Aires', 'Experience the vibrant culture of Buenos Aires. Tango the night away, stroll through colorful neighborhoods, and savor the delicious Argentine cuisine.', '2023-12-19', '2023-12-29', '3525.00', '06f0ceb2-82dd-4c51-900e-3c102efcf87e.jpg'),
+(6, 'London', 'Discover the historic landmarks and modern culture of London. Visit the Tower of London, take a ride on the London Eye, and enjoy a traditional afternoon tea.', '2023-07-10', '2023-07-15', '2200.00', '2397a82a-78c0-4c81-85d0-12b9f49b2352 .jpg'),
+(7, 'Huacachina', 'Escape to the tranquil oasis of Huacachina, surrounded by sand dunes. Go sandboarding, take a relaxing spa day, and watch the sunset over the desert.', '2023-11-13', '2023-11-19', '3600.00', '21a09e93-a316-4b63-947f-ec44156049f4.jpg'),
+(8, 'Madrid', 'Experience the lively spirit of Madrid, the capital of Spain. Admire the art at the Prado Museum, taste the delicious tapas, and dance the night away at a flamenco show.', '2023-06-14', '2023-06-26', '2960.00', '115d9361-ffca-4000-9b0f-3b5f57df5773.jpg'),
+(9, 'Norway', 'Embark on a breathtaking journey through the natural beauty of Norway. Cruise through the fjords, hike through the mountains, and see the Northern Lights.', '2023-10-10', '2023-10-17', '3756.00', '3c6220cc-6a80-434d-b4b5-9b7b6f237d14 .jpg'),
+(10, 'Paris', 'Fall in love with the enchanting city of Paris, known as the \"City of Love.\" Visit the Eiffel Tower, stroll along the Champs-Élysées, and indulge in the delicious French cuisine.', '2023-08-01', '2023-08-06', '2009.00', '9bbfde53-1e29-4677-a9af-7b34d19994de.jpg'),
+(11, 'Tbilisi', 'Discover the unique culture and history of Tbilisi, the capital of Georgia. Visit the Narikala Fortress, taste the traditional Georgian cuisine, and relax in the sulfur baths.', '2024-04-16', '2024-04-21', '2789.00', '7870c267-b882-4df1-be4e-f2024c0881b7.jpg'),
+(12, 'Tokyo', 'Experience the dynamic energy of Tokyo, the bustling capital of Japan. Explore the futuristic architecture, indulge in the delicious sushi, and immerse yourself in the vibrant nightlife.', '2023-09-03', '2023-09-13', '5260.00', ' 34e24f74-7bfa-4c7f-bff0-40c3cd487663.jpg');
 
 --
 -- Indexes for dumped tables
@@ -111,7 +120,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vacations`
 --
 ALTER TABLE `vacations`
-  MODIFY `vacationsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `vacationsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables

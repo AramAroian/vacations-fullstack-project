@@ -5,7 +5,7 @@ class VacationsModel {
   public startDate: string;
   public endDate: string;
   public price: number;
-  public imageUrl: string;
+  public imageName: string;
 
   public constructor(vacationsModel: VacationsModel) {
     this.vacationsId = vacationsModel.vacationsId;
@@ -14,7 +14,7 @@ class VacationsModel {
     this.startDate = vacationsModel.startDate;
     this.endDate = vacationsModel.endDate;
     this.price = vacationsModel.price;
-    this.imageUrl = vacationsModel.imageUrl;
+    this.imageName = vacationsModel.imageName;
   }
 }
 
