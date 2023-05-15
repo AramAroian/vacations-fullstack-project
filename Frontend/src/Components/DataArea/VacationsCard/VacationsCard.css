@@ -1,0 +1,104 @@
+.VacationsCard {
+  width: 30%;
+  margin: 1%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  height: 400px;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+}
+
+.VacationsCard img {
+  width: 100%;
+  display: block;
+  border-radius: 10px 10px 0 0;
+}
+
+.card-top-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.card-top-right .like-button {
+  background-color: #fff;
+  color: #777;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.card-top-right .like-count {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.card-body {
+  height: 180px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.destination-name {
+  margin: 0;
+  font-size: 24px;
+}
+
+.vacation-dates {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.vacation-description {
+  margin-bottom: 20px;
+  overflow-y: auto;
+  height: 120px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.vacation-description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.vacation-description::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.vacation-description::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.purchase-button {
+  background-color: #ff5722;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.purchase-button:hover {
+  background-color: #f44336;
+}
+
+.button-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 40px;
+  padding-top: 20px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+}

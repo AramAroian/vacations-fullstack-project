@@ -1,0 +1,22 @@
+Backend functions:
+- Get all vacations [X]
+- Get all followed vacations [X]
+- Add vacation [X]
+- Edit vacation [X]
+- Delete a vacation [X]
+- Follow a vacation [] ?
+- 
+
+
+
+
+What a vacation card should have?
+
+Main div
+- Background image
+- Dest name
+- Like button
+    Sub Div
+    - Date
+        Sub sub div
+        - Describtion

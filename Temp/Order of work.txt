@@ -1,0 +1,128 @@
+Backend:
+
+Create the relevant Models - usually export both as classes, however not all require a constructor.
+
+Update database name in appconfig.
+
+Define the desired services:
+Common examples for services to define:
+GETTERS:
+                    async function getAllCategories(): Promise<CategoryModel[]> {
+                        const sql = "SELECT * FROM categories";
+                        const categoryList = await dal.execute(sql);
+                        return categoryList;
+                    }
+
+                    async function getProductsByCategory(
+                    categoryId: number
+                    ): Promise<ProductModel[]> {
+                        const sql = "SELECT * FROM products WHERE categoryId = ?";
+                        const products = await dal.execute(sql, [categoryId]);
+                        return products;
+                    }
+ADDERS:
+                    async function addProduct(product: ProductModel): Promise<ProductModel> {
+                    const sql = "INSERT INTO products VALUES(DEFAULT , ? , ? , ? , ?, ?)";
+                    const result: OkPacket = await dal.execute(sql, [
+                        product.productName,
+                        product.manufactureTime,
+                        product.expirationTime,
+                        product.categoryId,
+                        product.price,
+                    ]);
+                    product.productId = result.insertId;
+                    return product;
+                    }
+DELETERS:
+                    async function deleteProduct(productId: number): Promise<void> {
+                        const sql = "DELETE FROM products WHERE productId = ?";
+                        await dal.execute(sql, [productId]);
+                    }
+
+
+
+
+Frontend:
+Utils:
+    - Update routes in AppConfig from data-routes in Backend
+Create frontend Models based on Backend
+Update Services 
+        * basic axios command-> const response = await axios.get<MODEL[]>(appConfig.URLNAME);
+                                const VARNAME = response.data;
+                                return VARNAME;
+    The entire idea is very straight forward - just remember to pass the right arguments to the functions, and chain them with the urls where nessecary.
+
+Update components based on the brief:
+    - basic use state syntax:   const [categories, setCategories] = useState<CategoryModel[]>([])
+    - basic use effect syntax:    useEffect(()=>{
+                                    dataService.getAllCategories()
+                                    .then((dbCategories) => setCategories(dbCategories))
+                                    .catch((err) => notifyService.error(err))
+                                  },[])
+
+    - Create functional component using props:  create fc FolderName/CompName -p
+        - Example for syntax using props:
+                                interface CardProps {
+                                product: ProductModel;
+                                }
+
+                                function Card(props: CardProps): JSX.Element {
+                                return (
+                                    <div className="Card">
+                                    Name: {props.product.productName} <br />
+                                    Manufactured on: {props.product.manufactureTime} <br />
+                                    Expires on: {props.product.expirationTime} <br />
+                                    Price: {props.product.price} <br />
+                                    </div>
+                                );
+                                }
+
+                                export default Card;
+
+
+- When defining a function you are passing to an event don't forget to pass the event as an argument. for example:
+
+                                function getTripsByArea(args: ChangeEvent<HTMLSelectElement>): void {
+                                    const tripId = +args.target.value;
+                                    dataService
+                                    .getTripsByArea(tripId)
+                                    .then((dbTrips) => setTrips(dbTrips))
+                                    .catch((err) => notifyService.error(err));
+                                }
+
+The following funciton needs to pass an ID argument to service function. we extract the Id from the values assigned to the target by passing "args: ChangeEvent<HTMLSelectElement>" to the function
+and then extracting the value from the event by using "args.target.value".
+                                                                
+
+Pointers for useForm:
+    - Create standard html from
+    - Define const { register, handleSubmit } = useForm<ModelName>();
+    - add to input each tag {...register("name of the recieving property in the modal")}
+    - add to form tag onSubmit={handleSubmit(send)} 
+    - example for a send function:  
+                    function send(ItenMane: ModelName): void {
+                        dataService
+                        .addItemName(ItemName)
+                        .then(() => {
+                            notifyService.success("ItemName has been added");
+                            navigate("/List");
+                        })
+                        .catch((err) => notifyService.error(err));
+                        console.log(ItemName);
+                    }
+    - so that the nevigate("/List") works add const navigate = useNavigate(); 
+
+
+Pointers for a delete functionality:
+- Best way to implement deletion of an object is by using NavLink that redirects back to list after deletion.
+- onClick event gets async function that awaits deletion from dataService and then refreshes the window.
+- Example:
+
+                  <NavLink
+                        onClick={async () => {
+                        await dataService.deleteTrip(props.trip.siteId);
+                        window.location.reload();
+                        }}
+                        to={"/List"}>
+                        ❌
+                </NavLink>

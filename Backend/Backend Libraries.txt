@@ -1,0 +1,16 @@
+npm init -y  
+Creates package json
+
+
+npm i @types/node -D
+
+npm i express
+npm i @types/express -D
+
+npm i cors
+npm i @types/cors -D
+
+npm i joi
+
+npm i mysql
+npm i @types/mysql -D
