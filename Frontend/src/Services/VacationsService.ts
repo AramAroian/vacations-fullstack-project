@@ -2,7 +2,7 @@ import axios from "axios";
 import VacationsModel from "../Models/VacationsModel";
 import appConfig from "../Utils/AppConfig";
 
-class VacationsService {
+class VactionsService {
     public async getAllVacations(): Promise<VacationsModel[]> {
         const response = await axios.get<VacationsModel[]>(appConfig.vacationsUrl);
         const vacations = response.data;
@@ -18,7 +18,8 @@ class VacationsService {
       }
     
       public async addVacation(vacation: VacationsModel): Promise<VacationsModel> {
-        const response = await axios.post<VacationsModel>(appConfig.vacationsUrl, vacation);
+        const headers = { "Content-Type": "multipart/form-data" }
+        const response = await axios.post<VacationsModel>(appConfig.vacationsUrl, vacation, { headers });
         const addedVacation = response.data;
         return addedVacation;
       }
@@ -28,6 +29,6 @@ class VacationsService {
       }
 }
 
-const vacationsService = new VacationsService();
+const vacationsService = new VactionsService();
 
 export default vacationsService;

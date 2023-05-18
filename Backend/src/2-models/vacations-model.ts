@@ -1,3 +1,5 @@
+import { UploadedFile } from "express-fileupload";
+
 class VacationsModel {
   public vacationsId: number;
   public destination: string;
@@ -5,16 +7,18 @@ class VacationsModel {
   public startDate: string;
   public endDate: string;
   public price: number;
-  public imageName: string;
+  public imageUrl: string;
+  public image: UploadedFile
 
-  public constructor(vacationsModel: VacationsModel) {
-    this.vacationsId = vacationsModel.vacationsId;
-    this.destination = vacationsModel.destination;
-    this.description = vacationsModel.description;
-    this.startDate = vacationsModel.startDate;
-    this.endDate = vacationsModel.endDate;
-    this.price = vacationsModel.price;
-    this.imageName = vacationsModel.imageName;
+  public constructor(vacation: VacationsModel) {
+    this.vacationsId = vacation.vacationsId;
+    this.destination = vacation.destination;
+    this.description = vacation.description;
+    this.startDate = vacation.startDate;
+    this.endDate = vacation.endDate;
+    this.price = vacation.price;
+    this.imageUrl = vacation.imageUrl;
+    this.image = vacation.image;
   }
 }
 

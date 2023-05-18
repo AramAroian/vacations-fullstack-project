@@ -1,9 +1,9 @@
-import React from 'react';
-import './VacationsList.css';
-import VacationsModel from '../../../Models/VacationsModel';
-import notifyService from '../../../Services/NotifyService';
-import VacationsCard from '../VacationsCard/VacationsCard';
-import vacationsService from '../../../Services/VacationsService';
+import React from "react";
+import "./VacationsList.css";
+import VacationsModel from "../../../Models/VacationsModel";
+import notifyService from "../../../Services/NotifyService";
+import VacationsCard from "../VacationsCard/VacationsCard";
+import vacationsService from "../../../Services/VacationsService";
 
 function VacationsList(): JSX.Element {
   const [vacations, setVacations] = React.useState<VacationsModel[]>([]);
@@ -17,7 +17,9 @@ function VacationsList(): JSX.Element {
 
   return (
     <div className="VacationsList">
-            {vacations.map(v => <VacationsCard key={v.vacationsId} vacation={v} />)}
+      {vacations.map((v) => (
+        <VacationsCard key={v.vacationsId} vacation={v} />
+      ))}
     </div>
   );
 }

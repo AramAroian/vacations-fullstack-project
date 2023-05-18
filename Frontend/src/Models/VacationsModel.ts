@@ -6,16 +6,7 @@ class VacationsModel {
   public endDate: string;
   public price: number;
   public imageUrl: string;
-
-  public constructor(vacationsModel: VacationsModel) {
-    this.vacationsId = vacationsModel.vacationsId;
-    this.destination = vacationsModel.destination;
-    this.description = vacationsModel.description;
-    this.startDate = vacationsModel.startDate;
-    this.endDate = vacationsModel.endDate;
-    this.price = vacationsModel.price;
-    this.imageUrl = vacationsModel.imageUrl;
-  }
+  public image: File;
 }
 
 export default VacationsModel;
