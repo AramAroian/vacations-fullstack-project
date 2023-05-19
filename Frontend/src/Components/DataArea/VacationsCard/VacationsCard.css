@@ -26,8 +26,8 @@
 }
 
 .card-top-right .like-button {
-  background-color: #fff;
-  color: #777;
+  background-color: #b19f9e;
+  color: #ffffff;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
@@ -35,10 +35,35 @@
   cursor: pointer;
 }
 
-.card-top-right .like-count {
-  margin-left: 5px;
-  font-size: 14px;
+.card-top-left {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
+
+
+.card-top-left .delete-button,
+.edit-button {
+  background-color: #fff;
+  color: #777;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.card-top-left .delete-button:hover {
+  background-color: #a16e83;
+  color: white;
+}
+
+.card-top-left .edit-button:hover {
+  background-color: #cebc81;
+  color: white;
+}
+
 
 .card-body {
   padding: 20px;

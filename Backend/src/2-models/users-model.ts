@@ -6,13 +6,13 @@ class UsersModel {
   public password: string;
   public authLevel: string;
 
-  public constructor(userModel: UsersModel) {
-    this.usersId = userModel.usersId;
-    this.firstName = userModel.firstName;
-    this.lastName = userModel.lastName;
-    this.email = userModel.email;
-    this.password = userModel.password;
-    this.authLevel = userModel.authLevel;
+  public constructor(user: UsersModel) {
+    this.usersId = user.usersId;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
+    this.email = user.email;
+    this.password = user.password;
+    this.authLevel = user.authLevel;
   }
 }
 

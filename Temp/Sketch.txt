@@ -20,3 +20,14 @@ Main div
     - Date
         Sub sub div
         - Describtion
+
+
+Authorization:
+Admin:
+    Access to admin page
+    Add new vacation
+    Edit vacation
+    Delete vacation
+
+User:
+Follow/Unfollow

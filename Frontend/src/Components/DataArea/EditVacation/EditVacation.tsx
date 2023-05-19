@@ -1,21 +1,36 @@
 import VacationsModel from "../../../Models/VacationsModel";
-import "./InsertVacation.css";
+import "./EditVacation.css";
 import vacationsService from "../../../Services/VacationsService";
 import notifyService from "../../../Services/NotifyService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { log } from "console";
 
-function InsertVacation(): JSX.Element {
-  const { register, handleSubmit } = useForm<VacationsModel>();
-
+function EditVacation(): JSX.Element {
+  const params = useParams();
+  const { register, handleSubmit, setValue } = useForm<VacationsModel>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const id = +params.vacationsId;
+    vacationsService.getVacationById(id)
+      .then(dbVacation => {
+        setValue("destination", dbVacation.destination);
+        setValue("description", dbVacation.description);
+        setValue("startDate", dbVacation.startDate);
+        setValue("endDate", dbVacation.endDate);
+        setValue("price", dbVacation.price);
+        setValue("image", dbVacation.image);
+      }).catch(err => notifyService.error(err))
+  }, []);
 
   async function send(vacation: VacationsModel): Promise<void> {
     try {
       vacation.image = (vacation.image as unknown as FileList)[0];
       console.log(vacation);
-      await vacationsService.addVacation(vacation);
-      notifyService.success("Vacation has been added");
+      await vacationsService.updateVacation(vacation);
+      notifyService.success("Vacation has been updated");
       navigate("/vacations");
     } catch (err) {
       notifyService.error(err);
@@ -24,10 +39,10 @@ function InsertVacation(): JSX.Element {
 
   return (
     <div className="InsertVacation box">
-      <h2>Insert Vacation</h2>
+      <h2>Edit Vacation</h2>
       <form onSubmit={handleSubmit(send)}>
         <label>Destination:</label>
-        <input type="text" {...register("destination")} name="destination" required/>
+        <input type="text" {...register("destination")} name="destination" required />
         <br />
 
         <label>Description:</label>
@@ -35,7 +50,7 @@ function InsertVacation(): JSX.Element {
         <br />
 
         <label>Start Date:</label>
-        <input type="date" {...register("startDate")} name="startDate" required/>
+        <input type="date" {...register("startDate")} name="startDate" required />
         <br />
 
         <label>End Date:</label>
@@ -47,7 +62,7 @@ function InsertVacation(): JSX.Element {
         <br />
 
         <label>Image:</label>
-        <input type="file" {...register("image")} name="image" accept="image/*" required/>
+        <input type="file" {...register("image")} name="image" accept="image/*" required />
         <br />
 
         <button type="submit" className="submit-button">
@@ -58,4 +73,4 @@ function InsertVacation(): JSX.Element {
   );
 }
 
-export default InsertVacation;
+export default EditVacation;

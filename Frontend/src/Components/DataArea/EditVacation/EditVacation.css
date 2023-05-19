@@ -1,0 +1,52 @@
+.InsertVacation {
+	width: 300px;
+    display: inline-block;
+    padding: 20px;
+    text-align: left;
+}
+
+
+.InsertVacation label,
+.InsertVacation input,
+.InsertVacation textarea,
+.InsertVacation button {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: large;
+}
+
+
+.submit-button {
+    margin-top: 10px;
+    background-color: #cebc81;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #479761;
+  }
+
+
+input,
+textarea {
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f7f7f7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #333;
+  transition: box-shadow 0.3s;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

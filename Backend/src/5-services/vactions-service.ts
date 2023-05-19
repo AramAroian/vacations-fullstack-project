@@ -6,8 +6,8 @@ import imageHandler from "../4-utils/image-handler";
 import { ResourceNotFoundError } from "../2-models/client-errors";
 
 
-async function getAllVacations(): Promise<[]> {
-    const sql = `SELECT destination,
+async function getAllVacations(): Promise<VacationsModel[]> {
+    const sql = `SELECT vacationsId, destination,
     description,
     DATE_FORMAT(startDate, '%d/%m/%Y') as startDate,
     DATE_FORMAT(endDate, '%d/%m/%Y') as endDate,
@@ -17,17 +17,30 @@ async function getAllVacations(): Promise<[]> {
     return vacations;
 }
 
-async function getFollowedVacations(userId: number): Promise<VacationsModel[]> {
+async function getVacationById(vacationsId: number): Promise<VacationsModel> {
+    const sql = `SELECT vacationsId, destination,
+    description,
+    DATE_FORMAT(startDate, '%d/%m/%Y') as startDate,
+    DATE_FORMAT(endDate, '%d/%m/%Y') as endDate,
+    price, 
+    CONCAT('${appConfig.imagesUrl}',imageName) AS imageUrl FROM vacations WHERE vacations.vacationsId = ${vacationsId}`;
+    const vacation = await dal.execute(sql);
+    return vacation;
+}
+
+
+// async function followVacation(userId: number): Promise<VacationsModel[]> {
+//     const sql = "INSERT INTO followers VALUES(?, ?)";
+//     const followedVacations = await dal.execute(sql, [userId]);
+//     return followedVacations;
+// }
+
+async function getFollowedVacationsByUser(userId: number): Promise<VacationsModel[]> {
     const sql = "SELECT v.* FROM vacations v INNER JOIN followers f ON v.vacationsId = f.vacationsId WHERE f.usersId = ?";
     const followedVacations = await dal.execute(sql, [userId]);
     return followedVacations;
 }
 
-// async function followVacation(userId: number , vacationId: number): Promise<VacationsModel[]> {
-//     const sql = "INSERT INTO followers VALUES(?, ?)";
-//     const followedVacations = await dal.execute(sql, [userId]);
-//     return followedVacations;
-// }
 
 async function addAVacation(vacation: VacationsModel): Promise<VacationsModel> {
 
@@ -107,9 +120,10 @@ async function getVacationImageName(vacationsId: number): Promise<string> {
 
 export default {
     getAllVacations,
-    getFollowedVacations,
+    getFollowedVacationsByUser,
     addAVacation,
     updateVacation,
-    deleteVacation
+    deleteVacation,
+    getVacationById
 };
 

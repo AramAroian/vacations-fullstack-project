@@ -1,14 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
 import vacationsService from "../5-services/vactions-service";
 import VacationsModel from "../2-models/vacations-model";
-import UsersModel from "../2-models/users-model";
 import imageHandler from "../4-utils/image-handler";
-import usersService from "../5-services/users-service";
+import verifyLogin from "../3-middleware/verify-login";
+import verifyAdmin from "../3-middleware/verify-admin";
+;
 
 const router = express.Router();
 
 // Get all vacations
-router.get("/vacations", async (request: Request, response: Response, next: NextFunction) => {
+router.get("/vacations", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const vacations = await vacationsService.getAllVacations();
         response.json(vacations);
@@ -18,11 +19,24 @@ router.get("/vacations", async (request: Request, response: Response, next: Next
     }
 });
 
+// Get vacation by id
+router.get("/vacations/:id", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const id = +request.params.id;
+        const result = await vacationsService.getVacationById(id);
+        const vacation = result[0];        
+        response.json(vacation);
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
+
 // Get followed vacations by user id 
-router.get("/vacations/:id", async (request: Request, response: Response, next: NextFunction) => {
+router.get("/vacations/user/:id", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const userId = +request.params.id;
-        const vacations = await vacationsService.getFollowedVacations(userId);
+        const vacations = await vacationsService.getFollowedVacationsByUser(userId);
         response.json(vacations);
     }
     catch (err: any) {
@@ -31,7 +45,7 @@ router.get("/vacations/:id", async (request: Request, response: Response, next: 
 });
 
 // Add vacation
-router.post("/vacations", async (request: Request, response: Response, next: NextFunction) => {
+router.post("/vacations", verifyAdmin ,async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.image = request.files?.image;
         const vacation = new VacationsModel(request.body);
@@ -44,7 +58,7 @@ router.post("/vacations", async (request: Request, response: Response, next: Nex
 });
 
 // Update vacation
-router.put("/vacations/:id", async (request: Request, response: Response, next: NextFunction) => {
+router.put("/vacations/:id", verifyAdmin ,async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.vacationsId = +request.params.id;
         request.body.image = request.files?.image;
@@ -57,22 +71,9 @@ router.put("/vacations/:id", async (request: Request, response: Response, next: 
     }
 });
 
-// Add user
-router.post("/users", async (request: Request, response: Response, next: NextFunction) => {
-    try {
-        const user = new UsersModel(request.body);
-        const addedUser = await usersService.addUser(user);
-        response.status(201).json(addedUser);
-    }
-    catch (err: any) {
-        next(err);
-    }
-});
-
-
 
 // Delete vacation
-router.delete("/vacations/:id", async (request: Request, response: Response, next: NextFunction) => {
+router.delete("/vacations/:id", verifyAdmin , async (request: Request, response: Response, next: NextFunction) => {
     try {
         const id = +request.params.id;
         await vacationsService.deleteVacation(id);
