@@ -7,8 +7,6 @@ function Menu(): JSX.Element {
       <NavLink to="/home">Home</NavLink>
       <span> | </span>
       <NavLink to="/vacations">Vacations</NavLink>
-      <span> | </span>
-      <NavLink to="/vacations/new">New Vacation</NavLink>
     </div>
   );
 }

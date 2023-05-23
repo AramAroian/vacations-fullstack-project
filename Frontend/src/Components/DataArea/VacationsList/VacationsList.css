@@ -1,0 +1,16 @@
+.add-button {
+    margin-top: 10px;
+    background-color: #cebc81;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-button:hover {
+    background-color: #479761;
+  }
+  

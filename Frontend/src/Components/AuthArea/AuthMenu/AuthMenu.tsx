@@ -3,6 +3,8 @@ import "./AuthMenu.css";
 import UsersModel from "../../../Models/UsersModel";
 import { authStore } from "../../../Redux/AuthState";
 import { NavLink } from "react-router-dom";
+import authService from "../../../Services/AuthService";
+import notifyService from "../../../Services/NotifyService";
 
 function AuthMenu(): JSX.Element {
     const [user, setUser] = useState<UsersModel>();
@@ -14,6 +16,11 @@ function AuthMenu(): JSX.Element {
         });
         return () => unsubscrube();
     }, []);
+
+    function logout():void {
+        authService.logout();
+        notifyService.success("Goodbye");
+    }
 
     return (
         <div className="AuthMenu">
@@ -28,7 +35,7 @@ function AuthMenu(): JSX.Element {
             {user &&
                 <Fragment>
                     <span>Hello {user.firstName} {user.lastName} | </span>
-                    <NavLink to="/logout">Logout</NavLink>
+                    <NavLink to="/home" onClick={logout}>Logout</NavLink>
                 </Fragment>
             }
         </div>

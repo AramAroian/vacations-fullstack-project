@@ -31,3 +31,16 @@ Admin:
 
 User:
 Follow/Unfollow
+
+
+
+
+
+
+Current pressing issues:
+Followers routes in backend + frontend functionality
+User vacations filters functionality
+Vacations graph and output to cvs
+delete and update redux fix
+Input validations
+spinners where appropriate

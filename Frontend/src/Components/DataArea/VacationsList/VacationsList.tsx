@@ -1,12 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./VacationsList.css";
 import VacationsModel from "../../../Models/VacationsModel";
 import notifyService from "../../../Services/NotifyService";
 import VacationsCard from "../VacationsCard/VacationsCard";
 import vacationsService from "../../../Services/VacationsService";
 import { vacationsStore } from "../../../Redux/VacationsState";
+import UsersModel from "../../../Models/UsersModel";
+import { authStore } from "../../../Redux/AuthState";
+import { NavLink } from "react-router-dom";
 
 function VacationsList(): JSX.Element {
+
+  const [user, setUser] = useState<UsersModel>();
+
+  useEffect(() => {
+    setUser(authStore.getState().user);
+    const unsubscrube = authStore.subscribe(() => {
+      setUser(authStore.getState().user);
+    });
+    return () => unsubscrube();
+  }, []);
+
   const [vacations, setVacations] = React.useState<VacationsModel[]>([]);
 
   useEffect(() => {
@@ -14,15 +28,55 @@ function VacationsList(): JSX.Element {
       .getAllVacations()
       .then((dbVacations) => setVacations(dbVacations))
       .catch((err) => notifyService.error(err));
-      
-      const unsubscrube = vacationsStore.subscribe(() => {
-        setVacations(vacationsStore.getState().vacations);
-      });
-      return () => unsubscrube();
+
+    const unsubscrube = vacationsStore.subscribe(() => {
+      setVacations(vacationsStore.getState().vacations);
+    });
+    return () => unsubscrube();
   }, []);
 
   return (
     <div className="VacationsList">
+      {user?.authLevel === 'admin' &&
+        <div className="add-button-div">
+          <NavLink to="/vacations/new">
+            <button className="add-button">+ New Vacation</button>
+          </ NavLink>
+        </div>
+      }
+      {user?.authLevel === 'user' &&
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              name="followed"
+            // checked={filters.followed}
+            // onChange={handleCheckboxChange}
+            />
+            Followed
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="ongoing"
+            // checked={filters.ongoing}
+            // onChange={handleCheckboxChange}
+            />
+            Ongoing
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="future"
+            // checked={filters.future}
+            // onChange={handleCheckboxChange}
+            />
+            Future
+          </label>
+        </div>
+      }
       {vacations.map((v) => (
         <VacationsCard key={v.vacationsId} vacation={v} />
       ))}

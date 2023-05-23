@@ -4,6 +4,7 @@ import VacationsModel from "../2-models/vacations-model";
 import imageHandler from "../4-utils/image-handler";
 import verifyLogin from "../3-middleware/verify-login";
 import verifyAdmin from "../3-middleware/verify-admin";
+import followService from "../5-services/follow-service";
 ;
 
 const router = express.Router();
@@ -24,7 +25,7 @@ router.get("/vacations/:id", verifyLogin, async (request: Request, response: Res
     try {
         const id = +request.params.id;
         const result = await vacationsService.getVacationById(id);
-        const vacation = result[0];        
+        const vacation = result[0];
         response.json(vacation);
     }
     catch (err: any) {
@@ -36,7 +37,7 @@ router.get("/vacations/:id", verifyLogin, async (request: Request, response: Res
 router.get("/vacations/user/:id", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const userId = +request.params.id;
-        const vacations = await vacationsService.getFollowedVacationsByUser(userId);
+        const vacations = await followService.getFollowedVacationsByUser(userId);
         response.json(vacations);
     }
     catch (err: any) {
@@ -45,7 +46,7 @@ router.get("/vacations/user/:id", verifyLogin, async (request: Request, response
 });
 
 // Add vacation
-router.post("/vacations", verifyAdmin ,async (request: Request, response: Response, next: NextFunction) => {
+router.post("/vacations", verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.image = request.files?.image;
         const vacation = new VacationsModel(request.body);
@@ -58,7 +59,7 @@ router.post("/vacations", verifyAdmin ,async (request: Request, response: Respon
 });
 
 // Update vacation
-router.put("/vacations/:id", verifyAdmin ,async (request: Request, response: Response, next: NextFunction) => {
+router.put("/vacations/:id", verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.vacationsId = +request.params.id;
         request.body.image = request.files?.image;
@@ -73,7 +74,7 @@ router.put("/vacations/:id", verifyAdmin ,async (request: Request, response: Res
 
 
 // Delete vacation
-router.delete("/vacations/:id", verifyAdmin , async (request: Request, response: Response, next: NextFunction) => {
+router.delete("/vacations/:id", verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const id = +request.params.id;
         await vacationsService.deleteVacation(id);

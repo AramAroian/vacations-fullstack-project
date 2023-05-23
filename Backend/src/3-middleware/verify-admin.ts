@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import cyber from "../4-utils/cyber";
 
-async function verifyLogin(request: Request, response: Response, next: NextFunction) {
+async function verifyAdmin(request: Request, response: Response, next: NextFunction) {
     try {
         await cyber.verifyAdmin(request);
         next();
@@ -9,4 +9,4 @@ async function verifyLogin(request: Request, response: Response, next: NextFunct
         next(err);
     }
 }
-export default verifyLogin;
+export default verifyAdmin;

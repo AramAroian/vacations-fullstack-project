@@ -31,19 +31,6 @@ async function getVacationById(vacationsId: number): Promise<VacationsModel> {
 }
 
 
-// async function followVacation(userId: number): Promise<VacationsModel[]> {
-//     const sql = "INSERT INTO followers VALUES(?, ?)";
-//     const followedVacations = await dal.execute(sql, [userId]);
-//     return followedVacations;
-// }
-
-async function getFollowedVacationsByUser(userId: number): Promise<VacationsModel[]> {
-    const sql = "SELECT v.* FROM vacations v INNER JOIN followers f ON v.vacationsId = f.vacationsId WHERE f.usersId = ?";
-    const followedVacations = await dal.execute(sql, [userId]);
-    return followedVacations;
-}
-
-
 async function addAVacation(vacation: VacationsModel): Promise<VacationsModel> {
 
     let imageName = null;
@@ -122,7 +109,6 @@ async function getVacationImageName(vacationsId: number): Promise<string> {
 
 export default {
     getAllVacations,
-    getFollowedVacationsByUser,
     addAVacation,
     updateVacation,
     deleteVacation,

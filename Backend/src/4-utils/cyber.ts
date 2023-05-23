@@ -19,128 +19,78 @@ function createToken(user: UsersModel): string {
 }
 
 
-
-
-
-// async function verifyToken(request: Request): Promise<boolean> {
-//     return new Promise<boolean>((resolve, reject) => {
-//         const header = request.header("authorization");
-
-//         if (!header) {
-//             reject(new UnauthorizedError("Incorrect username or password"));
-//         }
-
-//         // Extract token from bearer:
-//         const token = header.substring(7);
-
-//         if (!token) {
-//             reject(new UnauthorizedError("Incorrect username or password"));
-//         }
-
-//         jwt.verify(token, tokenKey, (err) => {
-//             if (err) {
-//                 reject(new UnauthorizedError("Invalid token"));
-//                 return
-//             }
-
-//             resolve(true);
-
-//         });
-
-//     });
-// }
-
-
-// async function verifyAdmin(request: Request): Promise<boolean> {
-//     return new Promise<boolean>((resolve, reject) => {
-//         const header = request.header("authorization");
-
-//         if (!header) {
-//             reject(new UnauthorizedError("Incorrect username or password"));
-//         }
-
-//         // Extract token from bearer:
-//         const token = header.substring(7);
-
-//         if (!token) {
-//             reject(new UnauthorizedError("Incorrect username or password"));
-//         }
-
-//         jwt.verify(token, tokenKey, (err, container: { user: UsersModel }) => {
-//             if (err) {
-//                 reject(new UnauthorizedError("Invalid token"));
-//                 return
-//             }
-
-//             const user = container.user;
-//             const authLevel = user.authLevel;
-
-//             if (authLevel !== 'admin') {
-//                 reject(new UnauthorizedError("Access denied"));
-//                 return
-//             }
-
-//             resolve(true);
-
-//         });
-
-//     });
-
-// }
-
-async function verifyTokenAuth(request:Request, requiredAuthLevel?:string): Promise<boolean>{
-    return new Promise<boolean>((resolve, reject)=>{
+async function verifyToken(request: Request): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
         const header = request.header("authorization");
 
-        if(!header) {
+        if (!header) {
             reject(new UnauthorizedError("Incorrect username or password"));
+            return;
         }
-        
+
         // Extract token from bearer:
-        const token = header.substring(7); 
+        const token = header.substring(7);
 
-        if(!token) {
+        if (!token) {
             reject(new UnauthorizedError("Incorrect username or password"));
+            return;
         }
 
-        jwt.verify(token, tokenKey, (err, container: {user:UsersModel}) => {
+        jwt.verify(token, tokenKey, (err) => {
             if (err) {
                 reject(new UnauthorizedError("Invalid token"));
-                return
+                return;
+            }
+
+            resolve(true);
+
+        });
+
+    });
+}
+
+
+async function verifyAdmin(request: Request): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+        const header = request.header("authorization");
+
+        if (!header) {
+            reject(new UnauthorizedError("Incorrect username or password"));
+            return;
+        }
+
+        // Extract token from bearer:
+        const token = header.substring(7);
+
+        if (!token) {
+            reject(new UnauthorizedError("Incorrect username or password"));
+            return;
+        }
+
+        jwt.verify(token, tokenKey, (err, container: { user: UsersModel }) => {
+            if (err) {
+                reject(new UnauthorizedError("Invalid token"));
+                return;
             }
 
             const user = container.user;
             const authLevel = user.authLevel;
 
-            if (requiredAuthLevel && authLevel !== requiredAuthLevel) {
+            if (authLevel !== 'admin') {
                 reject(new UnauthorizedError("Access denied"));
                 return
             }
+
             resolve(true);
-        }); 
+
+        });
+
     });
+
 }
 
-async function verifyUser(request: Request): Promise<boolean> {
-    try {
-        const authorizationStatus = await verifyTokenAuth(request);
-        return authorizationStatus;
-    } catch (err:any) {
-        console.error(err)
-    }
-  }
-  
-  async function verifyAdmin(request: Request): Promise<boolean> {
-    try {
-        const authorizationStatus = await verifyTokenAuth(request, 'admin');
-        return authorizationStatus;
-    } catch (err:any) {
-        console.error(err)
-    }
-  }
 export default {
     createToken,
-    // verifyToken,
+    verifyToken,
     verifyAdmin,
-    verifyUser
 };

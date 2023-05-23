@@ -3,7 +3,7 @@ import cyber from "../4-utils/cyber";
 
 async function verifyLogin(request: Request, response: Response, next: NextFunction) {
     try {
-        await cyber.verifyUser(request);
+        await cyber.verifyToken(request);
         next();
     } catch (err:any) {
         next(err);

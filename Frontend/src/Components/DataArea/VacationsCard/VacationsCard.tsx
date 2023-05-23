@@ -3,41 +3,61 @@ import VacationsModel from "../../../Models/VacationsModel";
 import "./VacationsCard.css";
 import vacationsService from "../../../Services/VacationsService";
 import notifyService from "../../../Services/NotifyService";
+import { useState, useEffect } from "react";
+import UsersModel from "../../../Models/UsersModel";
+import { authStore } from "../../../Redux/AuthState";
 
 interface VacationsCardProps {
   vacation: VacationsModel;
 }
 
-async function deleteProduct(vacationsId: number) {
-  try {
-    const confirmDelete = window.confirm("Are you sure you want to delete this vacation?");
-    if (confirmDelete) {
-      vacationsService.deleteVacation(vacationsId);
-      notifyService.success("Vacation was successfuly deleted");
-    }
-  } catch (err: any) {
-    notifyService.error(err);
-  }
-}
-
 function VacationsCard(props: VacationsCardProps): JSX.Element {
+
+  const [user, setUser] = useState<UsersModel>();
+
+  useEffect(() => {
+    setUser(authStore.getState().user);
+    const unsubscrube = authStore.subscribe(() => {
+      setUser(authStore.getState().user);
+    });
+    return () => unsubscrube();
+  }, []);
+
+  async function deleteProduct(vacationsId: number) {
+    try {
+      const confirmDelete = window.confirm("Are you sure you want to delete this vacation?");
+      if (confirmDelete) {
+        vacationsService.deleteVacation(vacationsId);
+        notifyService.success("Vacation was successfuly deleted");
+      }
+    } catch (err: any) {
+      notifyService.error(err);
+    }
+  }
+
+
+
   return (
     <div className="VacationsCard box">
       <div className="card">
         <div className="image-container">
           <img src={props.vacation.imageUrl} alt="Destination Image"></img>
         </div>
-        <div className="card-top-right">
-          <button className="like-button">Like 0</button>
-        </div>
-        <div className="card-top-left">
-          <NavLink to={"edit/" + props.vacation.vacationsId}>
-            <button className="edit-button">Edit</button>
-          </ NavLink>
-          <NavLink to="#" onClick={() => deleteProduct(props.vacation.vacationsId)}>
-            <button className="delete-button">Delete</button>
-          </NavLink>
-        </div>
+        {user?.authLevel === 'user' && 
+          <div className="card-top-right">
+            <button className="like-button">Like 0</button>
+          </div>
+        }
+        {user?.authLevel === 'admin' && 
+          <div className="card-top-left">
+            <NavLink to={"edit/" + props.vacation.vacationsId}>
+              <button className="edit-button">Edit</button>
+            </ NavLink>
+            <NavLink to="#" onClick={() => deleteProduct(props.vacation.vacationsId)}>
+              <button className="delete-button">Delete</button>
+            </NavLink>
+          </div>
+        }
         <div className="card-body">
           <h2 className="destination-name">{props.vacation.destination}</h2>
           <p className="vacation-dates">
@@ -48,7 +68,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
           </div>
         </div>
         <div className="card-bottom">
-          <button className="purchase-button">Book Vacation</button>
+          <button className="purchase-button">$ {props.vacation.price}</button>
         </div>
       </div>
     </div>
