@@ -4,24 +4,31 @@ import vacationsService from "../../../Services/VacationsService";
 import notifyService from "../../../Services/NotifyService";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import { log } from "console";
+import { useEffect, useState } from "react";
 
 function EditVacation(): JSX.Element {
   const params = useParams();
   const { register, handleSubmit, setValue } = useForm<VacationsModel>();
   const navigate = useNavigate();
+  const [vacation, setVacation] = useState<VacationsModel>();
 
   useEffect(() => {
     const id = +params.vacationsId;
     vacationsService.getVacationById(id)
       .then(dbVacation => {
+        const startDate = dbVacation.startDate.split('/').reverse().join('-');
+        const endDate = dbVacation.endDate.split('/').reverse().join('-');
+        //Passing the values to the form
+        setValue("vacationsId", dbVacation.vacationsId);
         setValue("destination", dbVacation.destination);
         setValue("description", dbVacation.description);
-        setValue("startDate", dbVacation.startDate);
-        setValue("endDate", dbVacation.endDate);
+        setValue("startDate", startDate);
+        setValue("endDate", endDate);
         setValue("price", dbVacation.price);
-        setValue("image", dbVacation.image);
+
+        setVacation(dbVacation);
+        console.log(vacation);
+        
       }).catch(err => notifyService.error(err))
   }, []);
 
@@ -41,6 +48,8 @@ function EditVacation(): JSX.Element {
     <div className="InsertVacation box">
       <h2>Edit Vacation</h2>
       <form onSubmit={handleSubmit(send)}>
+        <input type="hidden" {...register("vacationsId")} />
+
         <label>Destination:</label>
         <input type="text" {...register("destination")} name="destination" required />
         <br />
@@ -62,7 +71,8 @@ function EditVacation(): JSX.Element {
         <br />
 
         <label>Image:</label>
-        <input type="file" {...register("image")} name="image" accept="image/*" required />
+        <input type="file" {...register("image")} name="image" accept="image/*" />
+        <img src={vacation?.imageUrl}/>
         <br />
 
         <button type="submit" className="submit-button">

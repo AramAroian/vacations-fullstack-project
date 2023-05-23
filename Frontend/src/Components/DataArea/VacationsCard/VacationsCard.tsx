@@ -1,9 +1,23 @@
 import { NavLink } from "react-router-dom";
 import VacationsModel from "../../../Models/VacationsModel";
 import "./VacationsCard.css";
+import vacationsService from "../../../Services/VacationsService";
+import notifyService from "../../../Services/NotifyService";
 
 interface VacationsCardProps {
   vacation: VacationsModel;
+}
+
+async function deleteProduct(vacationsId: number) {
+  try {
+    const confirmDelete = window.confirm("Are you sure you want to delete this vacation?");
+    if (confirmDelete) {
+      vacationsService.deleteVacation(vacationsId);
+      notifyService.success("Vacation was successfuly deleted");
+    }
+  } catch (err: any) {
+    notifyService.error(err);
+  }
 }
 
 function VacationsCard(props: VacationsCardProps): JSX.Element {
@@ -20,7 +34,9 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
           <NavLink to={"edit/" + props.vacation.vacationsId}>
             <button className="edit-button">Edit</button>
           </ NavLink>
-          <button className="delete-button">Delete</button>
+          <NavLink to="#" onClick={() => deleteProduct(props.vacation.vacationsId)}>
+            <button className="delete-button">Delete</button>
+          </NavLink>
         </div>
         <div className="card-body">
           <h2 className="destination-name">{props.vacation.destination}</h2>
@@ -33,7 +49,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
         </div>
         <div className="card-bottom">
           <button className="purchase-button">Book Vacation</button>
-        </div> 
+        </div>
       </div>
     </div>
   );

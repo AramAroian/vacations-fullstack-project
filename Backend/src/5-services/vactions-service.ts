@@ -24,6 +24,8 @@ async function getVacationById(vacationsId: number): Promise<VacationsModel> {
     DATE_FORMAT(endDate, '%d/%m/%Y') as endDate,
     price, 
     CONCAT('${appConfig.imagesUrl}',imageName) AS imageUrl FROM vacations WHERE vacations.vacationsId = ${vacationsId}`;
+
+    
     const vacation = await dal.execute(sql);
     return vacation;
 }

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 function InsertVacation(): JSX.Element {
+
   const { register, handleSubmit } = useForm<VacationsModel>();
 
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ function InsertVacation(): JSX.Element {
       <h2>Insert Vacation</h2>
       <form onSubmit={handleSubmit(send)}>
         <label>Destination:</label>
-        <input type="text" {...register("destination")} name="destination" required/>
+        <input type="text" {...register("destination")} name="destination" required />
         <br />
 
         <label>Description:</label>
@@ -35,7 +36,7 @@ function InsertVacation(): JSX.Element {
         <br />
 
         <label>Start Date:</label>
-        <input type="date" {...register("startDate")} name="startDate" required/>
+        <input type="date" {...register("startDate")} name="startDate" required />
         <br />
 
         <label>End Date:</label>
@@ -47,7 +48,7 @@ function InsertVacation(): JSX.Element {
         <br />
 
         <label>Image:</label>
-        <input type="file" {...register("image")} name="image" accept="image/*" required/>
+        <input type="file" {...register("image")} name="image" accept="image/*" required />
         <br />
 
         <button type="submit" className="submit-button">

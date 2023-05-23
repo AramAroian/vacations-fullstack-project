@@ -1,17 +1,33 @@
 import axios from "axios";
 import VacationsModel from "../Models/VacationsModel";
 import appConfig from "../Utils/AppConfig";
+import { VacationsActionType, vacationsStore } from "../Redux/VacationsState";
 
 class VactionsService {
   public async getAllVacations(): Promise<VacationsModel[]> {
-    const response = await axios.get<VacationsModel[]>(appConfig.vacationsUrl);
-    const vacations = response.data;
+    // Get from redux global-state:
+    let vacations = vacationsStore.getState().vacations;
+
+    // Get from API: 
+    if (vacations.length === 0) {
+      const response = await axios.get<VacationsModel[]>(appConfig.vacationsUrl);
+      vacations = response.data;
+      // Update global-store
+      vacationsStore.dispatch({ type: VacationsActionType.GetVacations, payload: vacations });
+    }
     return vacations;
   }
 
   public async getVacationById(vacationId: number): Promise<VacationsModel> {
-    const response = await axios.get<VacationsModel>(appConfig.vacationsUrl + vacationId);
-    const vacation = response.data;
+    // Get from redux global-state:
+    let vacations = vacationsStore.getState().vacations;
+    let vacation = vacations.find(v => v.vacationsId === vacationId);
+
+    // Get from API: 
+    if (!vacation) {
+      const response = await axios.get<VacationsModel>(appConfig.vacationsUrl + vacationId);
+      vacation = response.data;
+    }
     return vacation;
   }
 
@@ -23,23 +39,27 @@ class VactionsService {
     return vacations;
   }
 
-  public async addVacation(vacation: VacationsModel): Promise<VacationsModel> {
+  public async addVacation(vacation: VacationsModel): Promise<void> {
     const headers = { "Content-Type": "multipart/form-data" }
     const response = await axios.post<VacationsModel>(appConfig.vacationsUrl, vacation, { headers });
     const addedVacation = response.data;
-    return addedVacation;
+    // Add added vacation to global state
+    vacationsStore.dispatch({type: VacationsActionType.AddVacation,payload: addedVacation});
   }
 
-  public async updateVacation(vacation: VacationsModel): Promise<VacationsModel> {
+  public async updateVacation(vacation: VacationsModel): Promise<void> {
     const headers = { "Content-Type": "multipart/form-data" }
     const response = await axios.put<VacationsModel>(appConfig.vacationsUrl + vacation.vacationsId, vacation, { headers });
     const updatedVacation = response.data;
-    return updatedVacation;
+    // Add updated vacation to global state
+    vacationsStore.dispatch({type: VacationsActionType.UpdateVacation, payload: updatedVacation});
   }
 
 
   public async deleteVacation(vacationId: number): Promise<void> {
     await axios.delete(appConfig.vacationsUrl + vacationId);
+    // Add added vacation to global state
+    vacationsStore.dispatch({type: VacationsActionType.DeleteVacation, payload: vacationId});
   }
 }
 

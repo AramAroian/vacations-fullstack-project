@@ -1,3 +1,53 @@
 .Register {
-	
+	width: 300px;
+    display: inline-block;
+    padding: 20px;
+    text-align: left;
+}
+
+
+.Register label,
+.Register input,
+.Register button {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: large;
+}
+
+h2 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.register-button {
+    margin-top: 30px;
+    background-color: #cebc81;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-button:hover {
+    background-color: #479761;
+  }
+
+
+input {
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f7f7f7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #333;
+  transition: box-shadow 0.3s;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
