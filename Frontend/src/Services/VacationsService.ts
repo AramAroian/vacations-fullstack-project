@@ -31,14 +31,6 @@ class VactionsService {
     return vacation;
   }
 
-  public async getFollowedVacations(genreId: number): Promise<VacationsModel[]> {
-    const response = await axios.get<VacationsModel[]>(
-      appConfig.followedUrl + genreId
-    );
-    const vacations = response.data;
-    return vacations;
-  }
-
   public async addVacation(vacation: VacationsModel): Promise<void> {
     const headers = { "Content-Type": "multipart/form-data" }
     const response = await axios.post<VacationsModel>(appConfig.vacationsUrl, vacation, { headers });

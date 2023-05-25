@@ -12,7 +12,7 @@ function Login(): JSX.Element {
             await authService.login(credentials);
             notifyService.success("Welcome Back");
             navigate("/vacations");
-            setTimeout(() => authService.logout(), 1800000); //30*60*1000
+            setTimeout(() => authService.logout(), 300000); //30*60*1000   1800000
         } catch (err: any) {
             notifyService.error(err)
         }

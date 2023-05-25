@@ -6,6 +6,9 @@ import notifyService from "../../../Services/NotifyService";
 import { useState, useEffect } from "react";
 import UsersModel from "../../../Models/UsersModel";
 import { authStore } from "../../../Redux/AuthState";
+import FollowersModel from "../../../Models/FollowersModel";
+import { followersStore } from "../../../Redux/FollowState";
+import followService from "../../../Services/FollowService";
 
 interface VacationsCardProps {
   vacation: VacationsModel;
@@ -15,10 +18,32 @@ interface VacationsCardProps {
 function VacationsCard(props: VacationsCardProps): JSX.Element {
 
   const [user, setUser] = useState<UsersModel>();
+  const [followedVacations, setFollowedVacations] = useState<FollowersModel[]>([]);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
+    // Get users state
     setUser(authStore.getState().user);
+    // Get followed vacations data
+    followService
+      .getAllFollowedVacations()
+      .then((dbFollowed) => setFollowedVacations(dbFollowed))
+      .catch((err) => notifyService.error(err));
+
+    const unsubscrube = followersStore.subscribe(() => {
+      setFollowedVacations(followersStore.getState().followers);
+      // Is current user follwoing the vacation
+      setIsFollowing(isUserFollowingVacation());
+    });
+    return () => unsubscrube();
   }, []);
+
+
+  // Data handlers
+  function isUserFollowingVacation(): boolean {
+    const followedVacationsIdArr = followedVacations.map((follower) => follower.vacationsId);
+    return followedVacationsIdArr.includes(props.vacation.vacationsId);
+  }
 
   async function deleteVacation(vacationsId: number) {
     try {
@@ -33,6 +58,11 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
     }
   }
 
+  const getLikesCount = (): number => {
+    const likes = followedVacations.filter((followed) => followed.vacationsId === props.vacation.vacationsId);
+    return likes.length;
+  };
+
   return (
     <div className="VacationsCard box">
       <div className="card">
@@ -41,7 +71,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
         </div>
         {user?.authLevel === 'user' &&
           <div className="card-top-right">
-            <button className="like-button">Like 0</button>
+            <button className="like-button">Like {getLikesCount()}</button>
           </div>
         }
         {user?.authLevel === 'admin' &&

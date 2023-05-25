@@ -8,6 +8,9 @@ import { vacationsStore } from "../../../Redux/VacationsState";
 import UsersModel from "../../../Models/UsersModel";
 import { authStore } from "../../../Redux/AuthState";
 import { NavLink } from "react-router-dom";
+import FollowersModel from "../../../Models/FollowersModel";
+import followService from "../../../Services/FollowService";
+import { followersStore } from "../../../Redux/FollowState";
 
 function VacationsList(): JSX.Element {
 
@@ -17,6 +20,7 @@ function VacationsList(): JSX.Element {
     setUser(authStore.getState().user);
   }, []);
 
+  // Getting vacations
   const [vacations, setVacations] = useState<VacationsModel[]>([]);
 
   useEffect(() => {
@@ -34,6 +38,7 @@ function VacationsList(): JSX.Element {
   const handleDeleteVacation = (vacationsId: number) => {
     setVacations((prevVacations) => prevVacations.filter((v) => v.vacationsId !== vacationsId));
   };
+
 
   return (
     <div className="VacationsList">

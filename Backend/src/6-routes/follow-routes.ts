@@ -7,8 +7,19 @@ import cyber from "../4-utils/cyber";
 
 const router = express.Router();
 
+// Get all followed vacations
+router.get("/followed-vacations", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const vacations = await followService.getAllFollowedVacations();
+        response.json(vacations);
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
+
 // Get followed vacations by user id 
-router.get("/vacations/followed/:userId", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
+router.get("/followed-vacations/:userId", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const userId = +request.params.userId;
         const vacations = await followService.getFollowedVacationsByUser(userId);
@@ -20,10 +31,9 @@ router.get("/vacations/followed/:userId", verifyLogin, async (request: Request, 
 });
 
 // Follow vacation
-router.post("/vacations/followed/:vacationId", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
+router.post("/followed-vacations/:vacationId", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const user = await cyber.extractUserFromToken(request);
-        console.log(user)
         const vacationId = +request.params.vacationId;
         const vacationToFollow = new FollowersModel(user.usersId, vacationId);
         const followedVacation = await followService.followVacation(vacationToFollow);
@@ -36,7 +46,7 @@ router.post("/vacations/followed/:vacationId", verifyLogin, async (request: Requ
 });
 
 // Unfollow
-router.delete("/vacations/followed/:vacationId", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
+router.delete("/followed-vacations/:vacationId", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const user = await cyber.extractUserFromToken(request);
         const vacationId = +request.params.vacationId;

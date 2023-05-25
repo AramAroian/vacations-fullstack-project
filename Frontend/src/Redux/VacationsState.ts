@@ -39,8 +39,6 @@ export function vacationsReducer(currentState = new VacationsState(), action: Va
         case VacationsActionType.DeleteVacation:
             const indexToDelete = newState.vacations.findIndex(v => v.vacationsId === action.payload);
             if (indexToDelete >= 0) {
-                console.log(indexToDelete)
-                console.log()
                 newState.vacations.splice(indexToDelete, 1);
             }
             break;
