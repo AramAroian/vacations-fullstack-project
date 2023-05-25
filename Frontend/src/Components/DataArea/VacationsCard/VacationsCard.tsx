@@ -9,6 +9,7 @@ import { authStore } from "../../../Redux/AuthState";
 
 interface VacationsCardProps {
   vacation: VacationsModel;
+  onDeleteVacation: (vacationsId: number) => void;
 }
 
 function VacationsCard(props: VacationsCardProps): JSX.Element {
@@ -17,17 +18,14 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
 
   useEffect(() => {
     setUser(authStore.getState().user);
-    const unsubscrube = authStore.subscribe(() => {
-      setUser(authStore.getState().user);
-    });
-    return () => unsubscrube();
   }, []);
 
-  async function deleteProduct(vacationsId: number) {
+  async function deleteVacation(vacationsId: number) {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this vacation?");
       if (confirmDelete) {
-        vacationsService.deleteVacation(vacationsId);
+        await vacationsService.deleteVacation(vacationsId);
+        props.onDeleteVacation(vacationsId);
         notifyService.success("Vacation was successfuly deleted");
       }
     } catch (err: any) {
@@ -35,25 +33,23 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
     }
   }
 
-
-
   return (
     <div className="VacationsCard box">
       <div className="card">
         <div className="image-container">
           <img src={props.vacation.imageUrl} alt="Destination Image"></img>
         </div>
-        {user?.authLevel === 'user' && 
+        {user?.authLevel === 'user' &&
           <div className="card-top-right">
             <button className="like-button">Like 0</button>
           </div>
         }
-        {user?.authLevel === 'admin' && 
+        {user?.authLevel === 'admin' &&
           <div className="card-top-left">
             <NavLink to={"edit/" + props.vacation.vacationsId}>
               <button className="edit-button">Edit</button>
             </ NavLink>
-            <NavLink to="#" onClick={() => deleteProduct(props.vacation.vacationsId)}>
+            <NavLink to="#" onClick={() => deleteVacation(props.vacation.vacationsId)}>
               <button className="delete-button">Delete</button>
             </NavLink>
           </div>

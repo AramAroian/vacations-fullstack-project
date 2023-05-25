@@ -33,18 +33,6 @@ router.get("/vacations/:id", verifyLogin, async (request: Request, response: Res
     }
 });
 
-// Get followed vacations by user id 
-router.get("/vacations/user/:id", verifyLogin, async (request: Request, response: Response, next: NextFunction) => {
-    try {
-        const userId = +request.params.id;
-        const vacations = await followService.getFollowedVacationsByUser(userId);
-        response.json(vacations);
-    }
-    catch (err: any) {
-        next(err);
-    }
-});
-
 // Add vacation
 router.post("/vacations", verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {

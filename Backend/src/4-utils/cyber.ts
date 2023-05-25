@@ -1,5 +1,5 @@
 import UsersModel from "../2-models/users-model";
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import { Request } from "express";
 import { UnauthorizedError } from "../2-models/client-errors";
 
@@ -89,8 +89,33 @@ async function verifyAdmin(request: Request): Promise<boolean> {
 
 }
 
+async function extractUserFromToken(request: Request): Promise<UsersModel> {
+    return new Promise<UsersModel>((resolve, reject) => {
+        const header = request.header("authorization");
+
+        if (!header) {
+            reject(new UnauthorizedError("Incorrect username or password"));
+            return;
+        }
+
+        // Extract token from bearer:
+        const token = header.substring(7);
+
+        if (!token) {
+            reject(new UnauthorizedError("Incorrect username or password"));
+            return;
+        }
+
+        const tokenData = jwt.decode(token)  as JwtPayload;;
+        const user = tokenData.user as UsersModel;
+        resolve(user);
+    });
+
+}
+
 export default {
     createToken,
     verifyToken,
     verifyAdmin,
+    extractUserFromToken
 };

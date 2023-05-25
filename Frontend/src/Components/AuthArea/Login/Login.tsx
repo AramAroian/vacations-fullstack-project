@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import UsersModel from "../../../Models/UsersModel";
+import { NavLink, useNavigate } from "react-router-dom";
 import notifyService from "../../../Services/NotifyService";
 import "./Login.css";
 import authService from "../../../Services/AuthService";
@@ -13,6 +12,7 @@ function Login(): JSX.Element {
             await authService.login(credentials);
             notifyService.success("Welcome Back");
             navigate("/vacations");
+            setTimeout(() => authService.logout(), 1800000); //30*60*1000
         } catch (err: any) {
             notifyService.error(err)
         }
@@ -34,7 +34,10 @@ function Login(): JSX.Element {
 
                 <button className="login-button">Login</button>
             </form>
-
+            <div className="form-footer">
+                don't have an account?<br />
+                <NavLink to="/register">sign up</NavLink>
+            </div>
         </div>
     );
 }

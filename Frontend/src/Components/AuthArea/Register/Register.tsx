@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import UsersModel from "../../../Models/UsersModel";
 import authService from "../../../Services/AuthService";
 import notifyService from "../../../Services/NotifyService";
@@ -38,6 +38,10 @@ function Register(): JSX.Element {
 
         <button className="register-button">Register</button>
       </form>
+      <div className="form-footer">
+        already a member?<br />
+        <NavLink to="/login">sign up</NavLink>
+      </div>
     </div>
   );
 }

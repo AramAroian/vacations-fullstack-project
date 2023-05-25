@@ -15,13 +15,9 @@ function VacationsList(): JSX.Element {
 
   useEffect(() => {
     setUser(authStore.getState().user);
-    const unsubscrube = authStore.subscribe(() => {
-      setUser(authStore.getState().user);
-    });
-    return () => unsubscrube();
   }, []);
 
-  const [vacations, setVacations] = React.useState<VacationsModel[]>([]);
+  const [vacations, setVacations] = useState<VacationsModel[]>([]);
 
   useEffect(() => {
     vacationsService
@@ -34,6 +30,10 @@ function VacationsList(): JSX.Element {
     });
     return () => unsubscrube();
   }, []);
+
+  const handleDeleteVacation = (vacationsId: number) => {
+    setVacations((prevVacations) => prevVacations.filter((v) => v.vacationsId !== vacationsId));
+  };
 
   return (
     <div className="VacationsList">
@@ -78,7 +78,7 @@ function VacationsList(): JSX.Element {
         </div>
       }
       {vacations.map((v) => (
-        <VacationsCard key={v.vacationsId} vacation={v} />
+        <VacationsCard key={v.vacationsId} vacation={v} onDeleteVacation={handleDeleteVacation} />
       ))}
     </div>
   );
