@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import "./Menu.css";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import UsersModel from "../../../Models/UsersModel";
 import { authStore } from "../../../Redux/AuthState";
 
@@ -25,6 +25,12 @@ function Menu(): JSX.Element {
       ) : (
         <NavLink to="/login">Vacations</NavLink>
       )}
+      {user && user.authLevel === 'admin' &&
+        <Fragment>
+          <span> | </span>
+          <NavLink to="/vacations/followers-chart">Followed Vacations</NavLink>
+        </Fragment>
+      }
     </div>
   );
 }

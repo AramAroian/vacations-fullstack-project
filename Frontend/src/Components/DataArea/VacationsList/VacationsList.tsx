@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./VacationsList.css";
 import VacationsModel from "../../../Models/VacationsModel";
 import notifyService from "../../../Services/NotifyService";
@@ -15,30 +15,87 @@ import { followersStore } from "../../../Redux/FollowState";
 function VacationsList(): JSX.Element {
 
   const [user, setUser] = useState<UsersModel>();
+  const [vacations, setVacations] = useState<VacationsModel[]>([]);
+  const [followedVacations, setFollowedVacations] = useState<FollowersModel[]>([]);
+  const [followedByUser, setFollowedByUser] = useState<FollowersModel[]>([]);
 
+  // Init checkbox filter options
+  const [filters, setFilters] = useState({
+    followed: false,
+    ongoing: false,
+    future: false
+  });
+
+
+  // Getting user from state
   useEffect(() => {
     setUser(authStore.getState().user);
   }, []);
 
-  // Getting vacations
-  const [vacations, setVacations] = useState<VacationsModel[]>([]);
-
+  // Getting vacations and followers
   useEffect(() => {
-    vacationsService
-      .getAllVacations()
-      .then((dbVacations) => setVacations(dbVacations))
-      .catch((err) => notifyService.error(err));
+    if (user) {
+      vacationsService
+        .getAllVacations()
+        .then((dbVacations) => setVacations(dbVacations))
+        .catch((err) => notifyService.error(err));
 
-    const unsubscrube = vacationsStore.subscribe(() => {
-      setVacations(vacationsStore.getState().vacations);
-    });
-    return () => unsubscrube();
-  }, []);
+      followService
+        .getAllFollowedVacations()
+        .then((dbFollowedVacations) => setFollowedVacations(dbFollowedVacations))
+        .catch((err) => notifyService.error(err))
+
+      const unsubscrubeVacations = vacationsStore.subscribe(() => {
+        setVacations(vacationsStore.getState().vacations);
+      });
+      const unsubscrubeFollowed = followersStore.subscribe(() => {
+        setFollowedVacations(followersStore.getState().followers);
+      });
+      return () => {
+        unsubscrubeVacations();
+        unsubscrubeFollowed();
+      }
+    }
+  }, [user]);
+
+  // Filtering vacations that are followed by the current user
+  useEffect(() => {
+    const followedByCurrentUser = followedVacations.filter((follower) => follower.usersId === user.usersId);
+    setFollowedByUser(followedByCurrentUser);
+  }, [followedVacations]);
+
+  // Checkbox filters functions
+  function isFollowedByUser(vacationId: number): boolean {
+    return followedByUser.some((f) => f.vacationsId === vacationId)
+  }
+
+  function convertStringToDate(dateString: string): Date {
+    const [day, month, year] = dateString.split('/');
+    const date = new Date(`${year}/${month}/${day}`);
+    return date;
+  }
+
+  function isVacationOngoing(vacation: VacationsModel): boolean {
+    const today = new Date();
+    return (convertStringToDate(vacation.startDate) < today && convertStringToDate(vacation.endDate) > today);
+  }
+
+  function isFutureVacation(vacation: VacationsModel) {
+    const today = new Date();
+    return (convertStringToDate(vacation.startDate) > today);
+  }
 
   const handleDeleteVacation = (vacationsId: number) => {
     setVacations((prevVacations) => prevVacations.filter((v) => v.vacationsId !== vacationsId));
   };
 
+  const handleCheckboxChange = (event: any) => {
+    const { name, checked } = event.target;
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [name]: checked
+    }));
+  };
 
   return (
     <div className="VacationsList">
@@ -55,38 +112,47 @@ function VacationsList(): JSX.Element {
             <input
               type="checkbox"
               name="followed"
-            // checked={filters.followed}
-            // onChange={handleCheckboxChange}
+              checked={filters.followed}
+              onChange={handleCheckboxChange}
             />
-            Followed
+            Followed vacations
           </label>
 
           <label>
             <input
               type="checkbox"
               name="ongoing"
-            // checked={filters.ongoing}
-            // onChange={handleCheckboxChange}
+              checked={filters.ongoing}
+              onChange={handleCheckboxChange}
             />
-            Ongoing
+            Ongoing vacations
           </label>
 
           <label>
             <input
               type="checkbox"
               name="future"
-            // checked={filters.future}
-            // onChange={handleCheckboxChange}
+              checked={filters.future}
+              onChange={handleCheckboxChange}
             />
-            Future
+            Future vacations
           </label>
         </div>
       }
-      {vacations.map((v) => (
-        <VacationsCard key={v.vacationsId} vacation={v} onDeleteVacation={handleDeleteVacation} />
-      ))}
+      {vacations
+        .filter((v) => {
+          return (
+            (!filters.followed || isFollowedByUser(v.vacationsId)) &&
+            (!filters.ongoing || isVacationOngoing(v)) &&
+            (!filters.future || isFutureVacation(v))
+          );
+        })
+        .map((v) => (
+          <VacationsCard key={v.vacationsId} vacation={v} onDeleteVacation={handleDeleteVacation} isFollowedByUser={isFollowedByUser(v.vacationsId)} />
+        ))}
     </div>
   );
 }
 
 export default VacationsList;
+

@@ -13,38 +13,35 @@ import followService from "../../../Services/FollowService";
 interface VacationsCardProps {
   vacation: VacationsModel;
   onDeleteVacation: (vacationsId: number) => void;
+  isFollowedByUser: boolean;
 }
 
 function VacationsCard(props: VacationsCardProps): JSX.Element {
 
   const [user, setUser] = useState<UsersModel>();
   const [followedVacations, setFollowedVacations] = useState<FollowersModel[]>([]);
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
+
     // Get users state
     setUser(authStore.getState().user);
+
     // Get followed vacations data
     followService
       .getAllFollowedVacations()
-      .then((dbFollowed) => setFollowedVacations(dbFollowed))
+      .then((dbFollowed) => {
+        setFollowedVacations(dbFollowed);
+
+      })
       .catch((err) => notifyService.error(err));
 
     const unsubscrube = followersStore.subscribe(() => {
       setFollowedVacations(followersStore.getState().followers);
-      // Is current user follwoing the vacation
-      setIsFollowing(isUserFollowingVacation());
     });
     return () => unsubscrube();
   }, []);
 
-
-  // Data handlers
-  function isUserFollowingVacation(): boolean {
-    const followedVacationsIdArr = followedVacations.map((follower) => follower.vacationsId);
-    return followedVacationsIdArr.includes(props.vacation.vacationsId);
-  }
-
+  // Prop handlers
   async function deleteVacation(vacationsId: number) {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this vacation?");
@@ -57,6 +54,24 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
       notifyService.error(err);
     }
   }
+
+  const toggleLike = async () => {
+    try {
+      if (props.isFollowedByUser) {
+
+        // Unfollow the vacation
+        await followService.unfollowVacation(props.vacation.vacationsId);
+        notifyService.success("Vacation was successfully unfollowed");
+      } else {
+        // Follow the vacation
+        await followService.followVacation(props.vacation.vacationsId);
+        notifyService.success("Vacation was successfully followed");
+      }
+      console.log('isFollowedByUser:', props.isFollowedByUser);
+    } catch (err: any) {
+      notifyService.error(err);
+    }
+  };
 
   const getLikesCount = (): number => {
     const likes = followedVacations.filter((followed) => followed.vacationsId === props.vacation.vacationsId);
@@ -71,7 +86,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
         </div>
         {user?.authLevel === 'user' &&
           <div className="card-top-right">
-            <button className="like-button">Like {getLikesCount()}</button>
+            <button className={`like-button ${props.isFollowedByUser ? 'followed' : ''}`} onClick={toggleLike}>Like {getLikesCount()}</button>
           </div>
         }
         {user?.authLevel === 'admin' &&

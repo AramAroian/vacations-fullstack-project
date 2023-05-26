@@ -14,7 +14,7 @@ async function getFollowedVacationsByUser(userId: number): Promise<FollowersMode
     return followedVacations;
 }
 
-async function followVacation(followedVacation: FollowersModel): Promise<void> {
+async function followVacation(followedVacation: FollowersModel): Promise<FollowersModel> {
     const isFollowed = await isVacationFollowed(followedVacation);
     if (isFollowed) throw new ValidationError(`This user already follows this vacation`);
 
@@ -23,6 +23,7 @@ async function followVacation(followedVacation: FollowersModel): Promise<void> {
         followedVacation.usersId,
         followedVacation.vacationsId
     ]);
+    return followedVacation;
 }
 
 async function isVacationFollowed(followedVacation: FollowersModel): Promise<boolean> {

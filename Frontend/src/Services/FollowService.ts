@@ -31,17 +31,18 @@ class FollowService {
     return followedByUser;
   }
 
-  public async followVacation(vacationToFollow: FollowersModel): Promise<void> {
-    const response = await axios.post<FollowersModel>(appConfig.followedUrl, vacationToFollow.vacationsId);
+  public async followVacation(toFollowId: number): Promise<void> {
+    const response = await axios.post<FollowersModel>(appConfig.followedUrl + toFollowId);
     const followedVacation = response.data;
     // Add followed vacation to global state
     followersStore.dispatch({ type: FollowersActionType.FollowVacation, payload: followedVacation });
+    
   }
 
-  public async unfollowVacation(vacationToUnfollow: FollowersModel): Promise<void> {
-    await axios.delete(appConfig.vacationsUrl + vacationToUnfollow.vacationsId);
+  public async unfollowVacation(toUnfollowId: number): Promise<void> {
+    await axios.delete(appConfig.followedUrl + toUnfollowId);
     // Add added vacation to global state
-    followersStore.dispatch({ type: FollowersActionType.UnfollowVacation, payload: vacationToUnfollow });
+    followersStore.dispatch({ type: FollowersActionType.UnfollowVacation, payload: toUnfollowId });
   }
 }
 

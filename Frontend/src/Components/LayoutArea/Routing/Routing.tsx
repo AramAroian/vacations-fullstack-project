@@ -6,6 +6,7 @@ import InsertVacation from "../../DataArea/InsertVacation/InsertVacation";
 import EditVacation from "../../DataArea/EditVacation/EditVacation";
 import Login from "../../AuthArea/Login/Login";
 import Register from "../../AuthArea/Register/Register";
+import FollowedVacationsChart from "../../DataArea/FollowedVacationsChart/FollowedVacationsChart";
 
 function Routing(): JSX.Element {
   return (
@@ -18,6 +19,8 @@ function Routing(): JSX.Element {
       <Route path="/vacations/new" element={<InsertVacation />} />
       {/* Update vacation */}
       <Route path="/vacations/edit/:vacationsId" element={<EditVacation />} />
+      {/* Followed vacations chart */}
+      <Route path="/vacations/followers-chart" element={<FollowedVacationsChart />} />
       {/* Register */}
       <Route path="/register" element={<Register />} />
       {/* Login */}
