@@ -39,7 +39,6 @@ Follow/Unfollow
 
 Current pressing issues:
 Followers frontend functionality
-User vacations filters functionality
 Vacations graph and output to cvs
 Input validations
 spinners where appropriate

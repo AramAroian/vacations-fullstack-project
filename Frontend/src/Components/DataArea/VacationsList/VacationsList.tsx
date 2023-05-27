@@ -64,7 +64,7 @@ function VacationsList(): JSX.Element {
     setFollowedByUser(followedByCurrentUser);
   }, [followedVacations]);
 
-  // Checkbox filters functions
+  // Checkbox filters and date filter functions
   function isFollowedByUser(vacationId: number): boolean {
     return followedByUser.some((f) => f.vacationsId === vacationId)
   }
@@ -80,11 +80,17 @@ function VacationsList(): JSX.Element {
     return (convertStringToDate(vacation.startDate) < today && convertStringToDate(vacation.endDate) > today);
   }
 
-  function isFutureVacation(vacation: VacationsModel) {
+  function isFutureVacation(vacation: VacationsModel): boolean {
     const today = new Date();
     return (convertStringToDate(vacation.startDate) > today);
   }
 
+  function fitlerByDate(vacations: VacationsModel[]): VacationsModel[] {
+    return vacations.sort((a, b) => convertStringToDate(a.startDate).getTime() - convertStringToDate(b.startDate).getTime())
+
+  }
+
+  // Event handlers
   const handleDeleteVacation = (vacationsId: number) => {
     setVacations((prevVacations) => prevVacations.filter((v) => v.vacationsId !== vacationsId));
   };
@@ -95,6 +101,32 @@ function VacationsList(): JSX.Element {
       ...prevFilters,
       [name]: checked
     }));
+  };
+
+  const handleToggleLike = (vacationId: number) => {
+    const isFollowed = isFollowedByUser(vacationId);
+    if (isFollowed) {
+      followService
+        .unfollowVacation(vacationId)
+        .then(() => {
+          setFollowedVacations((prevFollowedVacations) =>
+            prevFollowedVacations.filter((f) => f.vacationsId !== vacationId)
+          );
+          notifyService.success("Vacation unfollowed");
+        })
+        .catch((err) => notifyService.error(err));
+    } else {
+      followService
+        .followVacation(vacationId)
+        .then(() => {
+          setFollowedVacations((prevFollowedVacations) => [
+            ...prevFollowedVacations,
+            { vacationsId: vacationId, usersId: user?.usersId },
+          ]);
+          notifyService.success("Vacation followed");
+        })
+        .catch((err) => notifyService.error(err));
+    }
   };
 
   return (
@@ -139,7 +171,7 @@ function VacationsList(): JSX.Element {
           </label>
         </div>
       }
-      {vacations
+      {fitlerByDate(vacations)
         .filter((v) => {
           return (
             (!filters.followed || isFollowedByUser(v.vacationsId)) &&
@@ -148,7 +180,12 @@ function VacationsList(): JSX.Element {
           );
         })
         .map((v) => (
-          <VacationsCard key={v.vacationsId} vacation={v} onDeleteVacation={handleDeleteVacation} isFollowedByUser={isFollowedByUser(v.vacationsId)} />
+          <VacationsCard
+            key={v.vacationsId}
+            vacation={v}
+            onDeleteVacation={handleDeleteVacation}
+            onToggleLike={handleToggleLike}
+            isFollowedByUser={isFollowedByUser(v.vacationsId)} />
         ))}
     </div>
   );

@@ -8,11 +8,12 @@ import UsersModel from "../../../Models/UsersModel";
 import { authStore } from "../../../Redux/AuthState";
 import FollowersModel from "../../../Models/FollowersModel";
 import { followersStore } from "../../../Redux/FollowState";
-import followService from "../../../Services/FollowService";
+
 
 interface VacationsCardProps {
   vacation: VacationsModel;
   onDeleteVacation: (vacationsId: number) => void;
+  onToggleLike: (vacationId: number) => void;
   isFollowedByUser: boolean;
 }
 
@@ -26,15 +27,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
     // Get users state
     setUser(authStore.getState().user);
 
-    // Get followed vacations data
-    followService
-      .getAllFollowedVacations()
-      .then((dbFollowed) => {
-        setFollowedVacations(dbFollowed);
-
-      })
-      .catch((err) => notifyService.error(err));
-
+    // Get followed vacations state
     const unsubscrube = followersStore.subscribe(() => {
       setFollowedVacations(followersStore.getState().followers);
     });
@@ -55,22 +48,9 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
     }
   }
 
-  const toggleLike = async () => {
-    try {
-      if (props.isFollowedByUser) {
-
-        // Unfollow the vacation
-        await followService.unfollowVacation(props.vacation.vacationsId);
-        notifyService.success("Vacation was successfully unfollowed");
-      } else {
-        // Follow the vacation
-        await followService.followVacation(props.vacation.vacationsId);
-        notifyService.success("Vacation was successfully followed");
-      }
-      console.log('isFollowedByUser:', props.isFollowedByUser);
-    } catch (err: any) {
-      notifyService.error(err);
-    }
+  const handleToggleLike = () => {
+    props.onToggleLike(props.vacation.vacationsId);
+    console.log(followedVacations)
   };
 
   const getLikesCount = (): number => {
@@ -86,7 +66,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
         </div>
         {user?.authLevel === 'user' &&
           <div className="card-top-right">
-            <button className={`like-button ${props.isFollowedByUser ? 'followed' : ''}`} onClick={toggleLike}>Like {getLikesCount()}</button>
+            <button className={`like-button ${props.isFollowedByUser ? 'followed' : ''}`} onClick={handleToggleLike}>Like {getLikesCount()}</button>
           </div>
         }
         {user?.authLevel === 'admin' &&
