@@ -12,6 +12,7 @@ import FollowersModel from "../../../Models/FollowersModel";
 import followService from "../../../Services/FollowService";
 import { followersStore } from "../../../Redux/FollowState";
 import Pagination from "./Pagination/Pagination";
+import Spinner from "../../SharedArea/Spinner/Spinner";
 
 
 function VacationsList(): JSX.Element {
@@ -131,7 +132,7 @@ function VacationsList(): JSX.Element {
   const currentVacations = vacations.slice(indexOfFirstCard, indexOfLastCard);
 
   //Change page
-  const paginate = (pageNumber:number) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
   return (
     <div className="VacationsList">
@@ -175,6 +176,9 @@ function VacationsList(): JSX.Element {
           </label>
         </div>
       }
+
+      {vacations.length === 0 && <Spinner />}
+
       {currentVacations
         .filter((v) => {
           return (
@@ -193,7 +197,7 @@ function VacationsList(): JSX.Element {
             followCount={followersCount(v.vacationsId)}
           />
         ))}
-        <Pagination cardsPerPage={cardsPerPage} totalCards={vacations.length} paginate={paginate}/>
+      <Pagination cardsPerPage={cardsPerPage} totalCards={vacations.length} paginate={paginate} />
     </div>
   );
 }
