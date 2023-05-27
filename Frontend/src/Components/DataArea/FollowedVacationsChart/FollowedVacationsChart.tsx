@@ -1,5 +1,5 @@
 import "./FollowedVacationsChart.css";
-import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ChartDataset } from "chart.js";
+import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from "chart.js";
 import { useEffect, useState } from "react";
 import { Bar } from 'react-chartjs-2';
 import FollowersModel from "../../../Models/FollowersModel";
@@ -11,7 +11,7 @@ import followService from "../../../Services/FollowService";
 import notifyService from "../../../Services/NotifyService";
 import vacationsService from "../../../Services/VacationsService";
 import UsersModel from "../../../Models/UsersModel";
-import {CSVLink} from "react-csv";
+import { CSVLink } from "react-csv";
 
 Chart.register(
     BarElement, CategoryScale, LinearScale, Tooltip, Legend
@@ -30,9 +30,9 @@ type CustomChartDataSet = {
 }
 
 type CSVData = {
-    destinations: string[],
-    followers: number[]
-}
+    Destination: string;
+    Followers: number;
+};
 
 function FollowedVacationsChart(): JSX.Element {
     const [user, setUser] = useState<UsersModel>();
@@ -96,17 +96,25 @@ function FollowedVacationsChart(): JSX.Element {
                 ],
             });
 
-
+            const formatedCSVData = prepareCSVData(chartLabels, chartData);
+            setCSVData(formatedCSVData);
         }
     }, [vacations, followedVacations]);
+
+    function prepareCSVData(destination: string[], followers: number[]): Array<{ Destination: string; Followers: number }> {
+        return destination.map((label, index) => ({
+            Destination: label,
+            Followers: followers[index],
+        }));
+    }
+
     return (
         <div className="FollowedVacationsChart">
             <div className="chart-container box">
                 <Bar data={chartData} />
-            </div> <br />
-            <div className="export-btn">
-                <CSVLink data={csvData}></CSVLink>
             </div>
+
+                <CSVLink className="export-btn" data={csvData} filename="followed_vacations.csv">Export to CSV</CSVLink>
 
         </div>
     );

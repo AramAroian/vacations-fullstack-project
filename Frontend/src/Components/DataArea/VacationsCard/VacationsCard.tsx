@@ -6,8 +6,7 @@ import notifyService from "../../../Services/NotifyService";
 import { useState, useEffect } from "react";
 import UsersModel from "../../../Models/UsersModel";
 import { authStore } from "../../../Redux/AuthState";
-import FollowersModel from "../../../Models/FollowersModel";
-import { followersStore } from "../../../Redux/FollowState";
+
 
 
 interface VacationsCardProps {
@@ -15,23 +14,16 @@ interface VacationsCardProps {
   onDeleteVacation: (vacationsId: number) => void;
   onToggleLike: (vacationId: number) => void;
   isFollowedByUser: boolean;
+  followCount: number;
 }
 
 function VacationsCard(props: VacationsCardProps): JSX.Element {
 
   const [user, setUser] = useState<UsersModel>();
-  const [followedVacations, setFollowedVacations] = useState<FollowersModel[]>([]);
 
   useEffect(() => {
-
     // Get users state
     setUser(authStore.getState().user);
-
-    // Get followed vacations state
-    const unsubscrube = followersStore.subscribe(() => {
-      setFollowedVacations(followersStore.getState().followers);
-    });
-    return () => unsubscrube();
   }, []);
 
   // Prop handlers
@@ -50,12 +42,6 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
 
   const handleToggleLike = () => {
     props.onToggleLike(props.vacation.vacationsId);
-    console.log(followedVacations)
-  };
-
-  const getLikesCount = (): number => {
-    const likes = followedVacations.filter((followed) => followed.vacationsId === props.vacation.vacationsId);
-    return likes.length;
   };
 
   return (
@@ -66,7 +52,7 @@ function VacationsCard(props: VacationsCardProps): JSX.Element {
         </div>
         {user?.authLevel === 'user' &&
           <div className="card-top-right">
-            <button className={`like-button ${props.isFollowedByUser ? 'followed' : ''}`} onClick={handleToggleLike}>Like {getLikesCount()}</button>
+            <button className={`like-button ${props.isFollowedByUser ? 'followed' : ''}`} onClick={handleToggleLike}>Like {props.followCount}</button>
           </div>
         }
         {user?.authLevel === 'admin' &&

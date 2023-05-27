@@ -1,4 +1,29 @@
-.chart-container {
+.FollowedVacationsChart, .chart-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  .chart-container {
 	height: 700px;
-    
-}
+	width: 100%;
+	background-image: linear-gradient(180deg,rgb(253, 244, 163), rgb(240, 230, 140) ) !important;
+  }
+  
+  .export-btn {
+	margin-top: 10px;
+	background-color: #cebc81;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	width: 200px;
+  }
+  
+  .export-btn:hover {
+	background-color: #479761;
+  }
+  
