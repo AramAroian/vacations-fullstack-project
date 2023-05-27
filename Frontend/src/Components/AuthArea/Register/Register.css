@@ -57,3 +57,9 @@ input:focus {
   text-align: center;
   font-size: large;
 }
+
+p {
+  color: rgb(163, 12, 12);
+  font-size: small;
+  font-weight: bold;
+}

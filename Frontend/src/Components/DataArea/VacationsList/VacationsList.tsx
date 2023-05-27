@@ -59,7 +59,7 @@ function VacationsList(): JSX.Element {
 
   // Checkbox filters and date filter functions
   function isFollowedByUser(vacationId: number): boolean {
-    return followedVacations.some((f)=> f.vacationsId === vacationId && f.usersId === user.usersId);
+    return followedVacations.some((f) => f.vacationsId === vacationId && f.usersId === user.usersId);
   }
 
   function convertStringToDate(dateString: string): Date {
@@ -121,7 +121,7 @@ function VacationsList(): JSX.Element {
         .catch((err) => notifyService.error(err));
     }
   };
-  
+
 
   return (
     <div className="VacationsList">
