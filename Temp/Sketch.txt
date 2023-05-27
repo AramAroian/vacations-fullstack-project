@@ -39,6 +39,5 @@ Follow/Unfollow
 
 Current pressing issues:
 Followers frontend functionality
-Vacations graph and output to cvs
-Input validations
+Pagination
 spinners where appropriate

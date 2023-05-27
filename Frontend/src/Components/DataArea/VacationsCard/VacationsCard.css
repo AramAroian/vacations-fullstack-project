@@ -72,10 +72,12 @@
 
 .card-body {
   padding: 20px;
+  padding-bottom: 0px;
   margin-top: 20px;
-  height: calc(100% - 200px);
+  height: 250px;
   overflow: hidden;
 }
+
 
 .destination-name {
   margin: 0;
@@ -88,7 +90,6 @@
 }
 
 .vacation-description {
-  margin-bottom: 20px;
   overflow-y: auto;
   height: calc(100% - 130px);
   text-align: left;

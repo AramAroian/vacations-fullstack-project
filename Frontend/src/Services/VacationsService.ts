@@ -11,7 +11,8 @@ class VactionsService {
     // Get from API: 
     if (vacations.length === 0) {
       const response = await axios.get<VacationsModel[]>(appConfig.vacationsUrl);
-      vacations = response.data;
+
+      vacations = fitlerByDate(response.data);
       // Update global-store
       vacationsStore.dispatch({ type: VacationsActionType.GetVacations, payload: vacations });
     }
@@ -54,6 +55,17 @@ class VactionsService {
     vacationsStore.dispatch({type: VacationsActionType.DeleteVacation, payload: vacationId});
   }
 }
+
+  function fitlerByDate(vacations: VacationsModel[]): VacationsModel[] {
+    return vacations.sort((a, b) => convertStringToDate(a.startDate).getTime() - convertStringToDate(b.startDate).getTime())
+
+  }
+
+    function convertStringToDate(dateString: string): Date {
+    const [day, month, year] = dateString.split('/');
+    const date = new Date(`${year}/${month}/${day}`);
+    return date;
+  }
 
 const vacationsService = new VactionsService();
 

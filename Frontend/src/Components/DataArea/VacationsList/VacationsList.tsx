@@ -11,12 +11,19 @@ import { NavLink } from "react-router-dom";
 import FollowersModel from "../../../Models/FollowersModel";
 import followService from "../../../Services/FollowService";
 import { followersStore } from "../../../Redux/FollowState";
+import Pagination from "./Pagination/Pagination";
+
 
 function VacationsList(): JSX.Element {
 
   const [user, setUser] = useState<UsersModel>();
   const [vacations, setVacations] = useState<VacationsModel[]>([]);
   const [followedVacations, setFollowedVacations] = useState<FollowersModel[]>([]);
+
+  //Pagination inputs
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage] = useState(9);
+
 
   // Init checkbox filter options
   const [filters, setFilters] = useState({
@@ -78,11 +85,6 @@ function VacationsList(): JSX.Element {
     return (convertStringToDate(vacation.startDate) > today);
   }
 
-  function fitlerByDate(vacations: VacationsModel[]): VacationsModel[] {
-    return vacations.sort((a, b) => convertStringToDate(a.startDate).getTime() - convertStringToDate(b.startDate).getTime())
-
-  }
-
   function followersCount(vacationId: number): number {
     const follows = followedVacations.filter(
       (followed) => followed.vacationsId === vacationId
@@ -122,6 +124,14 @@ function VacationsList(): JSX.Element {
     }
   };
 
+
+  // Handling pagination
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentVacations = vacations.slice(indexOfFirstCard, indexOfLastCard);
+
+  //Change page
+  const paginate = (pageNumber:number) => setCurrentPage(pageNumber)
 
   return (
     <div className="VacationsList">
@@ -165,7 +175,7 @@ function VacationsList(): JSX.Element {
           </label>
         </div>
       }
-      {fitlerByDate(vacations)
+      {currentVacations
         .filter((v) => {
           return (
             (!filters.followed || isFollowedByUser(v.vacationsId)) &&
@@ -183,6 +193,7 @@ function VacationsList(): JSX.Element {
             followCount={followersCount(v.vacationsId)}
           />
         ))}
+        <Pagination cardsPerPage={cardsPerPage} totalCards={vacations.length} paginate={paginate}/>
     </div>
   );
 }

@@ -58,7 +58,7 @@ input:focus {
   font-size: large;
 }
 
-p {
+.login p {
   color: rgb(163, 12, 12);
   font-size: small;
   font-weight: bold;
