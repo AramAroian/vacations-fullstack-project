@@ -17,6 +17,7 @@
     "notyf": "^3.10.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
+    "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "react-redux": "^8.0.5",

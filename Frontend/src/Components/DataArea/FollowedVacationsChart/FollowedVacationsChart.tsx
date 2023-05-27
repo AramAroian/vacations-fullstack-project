@@ -11,21 +11,35 @@ import followService from "../../../Services/FollowService";
 import notifyService from "../../../Services/NotifyService";
 import vacationsService from "../../../Services/VacationsService";
 import UsersModel from "../../../Models/UsersModel";
+import {CSVLink} from "react-csv";
 
 Chart.register(
     BarElement, CategoryScale, LinearScale, Tooltip, Legend
 )
 
-type ChartDataSet = {
+type ChartData = {
     labels: string[];
-    datasets: any[];
+    datasets: CustomChartDataSet[];
+}
+
+type CustomChartDataSet = {
+    label: string;
+    data: number[],
+    fill: boolean,
+    borderColor: string,
+}
+
+type CSVData = {
+    destinations: string[],
+    followers: number[]
 }
 
 function FollowedVacationsChart(): JSX.Element {
     const [user, setUser] = useState<UsersModel>();
     const [vacations, setVacations] = useState<VacationsModel[]>([]);
     const [followedVacations, setFollowedVacations] = useState<FollowersModel[]>([]);
-    const [chartData, setChartData] = useState<ChartDataSet>({ labels: [], datasets: [] });
+    const [chartData, setChartData] = useState<ChartData>({ labels: [], datasets: [] });
+    const [csvData, setCSVData] = useState<CSVData[]>([]);
 
 
     // Getting user from state
@@ -61,35 +75,39 @@ function FollowedVacationsChart(): JSX.Element {
 
     // Pupilating chart data
     useEffect(() => {
-        // const inpLabels = vacations.map((v)=>v.destination)
-        let newChartData: ChartDataset;
-        vacations.forEach((v) => {
+        if (vacations.length > 0 && followedVacations.length > 0) {
+            const chartLabels = vacations.map((vacation) => vacation.destination);
+            const chartData = vacations.map((vacation) => {
+                const followersCount = followedVacations.filter(
+                    (followed) => followed.vacationsId === vacation.vacationsId
+                ).length;
+                return followersCount;
+            });
 
-        });
-
-        // setChartData();
-    }, [followedVacations]);
-
-
-    // Chart data
-    // const data = {
-    //     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    //     datasets: [
-    //         {
-    //             label: 'Sales',
-    //             data: [100, 200, 150, 300, 250, 400],
-    //             fill: false,
-    //             borderColor: 'rgba(75,192,192,1)',
-    //         },
-    //     ],
-    // };
+            setChartData({
+                labels: chartLabels,
+                datasets: [
+                    {
+                        label: "Followers",
+                        data: chartData,
+                        fill: false,
+                        borderColor: "#3F51B5",
+                    },
+                ],
+            });
 
 
+        }
+    }, [vacations, followedVacations]);
     return (
         <div className="FollowedVacationsChart">
             <div className="chart-container box">
                 <Bar data={chartData} />
+            </div> <br />
+            <div className="export-btn">
+                <CSVLink data={csvData}></CSVLink>
             </div>
+
         </div>
     );
 }
