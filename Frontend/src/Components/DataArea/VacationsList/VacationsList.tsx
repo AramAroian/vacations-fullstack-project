@@ -47,23 +47,29 @@ function VacationsList(): JSX.Element {
         .then((dbVacations) => setVacations(dbVacations))
         .catch((err) => notifyService.error(err));
 
-      followService
-        .getAllFollowedVacations()
-        .then((dbFollowedVacations) => setFollowedVacations(dbFollowedVacations))
-        .catch((err) => notifyService.error(err))
-
       const unsubscrubeVacations = vacationsStore.subscribe(() => {
         setVacations(vacationsStore.getState().vacations);
       });
-      const unsubscrubeFollowed = followersStore.subscribe(() => {
-        setFollowedVacations(followersStore.getState().followers);
-      });
-      return () => {
-        unsubscrubeVacations();
-        unsubscrubeFollowed();
-      }
+
+      return unsubscrubeVacations();
+
     }
   }, [user]);
+
+  useEffect(() => {
+    followService
+      .getAllFollowedVacations()
+      .then((dbFollowedVacations) => setFollowedVacations(dbFollowedVacations))
+      .catch((err) => notifyService.error(err))
+
+    const unsubscrubeFollowed = followersStore.subscribe(() => {
+      const dupFollowedVacations = followersStore.getState().followers;
+      setFollowedVacations([...dupFollowedVacations]);
+    });
+
+    return unsubscrubeFollowed();
+
+  })
 
   // Checkbox filters and date filter functions
   function isFollowedByUser(vacationId: number): boolean {
@@ -109,9 +115,15 @@ function VacationsList(): JSX.Element {
   const handleToggleLike = (vacationId: number) => {
     const isFollowed = isFollowedByUser(vacationId);
     if (isFollowed) {
+      const vacationToUnfollow = new FollowersModel()
+      vacationToUnfollow.vacationsId = vacationId;
+      vacationToUnfollow.usersId = user.usersId;
       followService
-        .unfollowVacation(vacationId)
+        .unfollowVacation(vacationToUnfollow)
         .then(() => {
+          setFollowedVacations([...followedVacations]);
+          console.log(followedVacations);
+          console.log(isFollowedByUser(vacationId));
           notifyService.success("Vacation unfollowed");
         })
         .catch((err) => notifyService.error(err));
@@ -119,6 +131,9 @@ function VacationsList(): JSX.Element {
       followService
         .followVacation(vacationId)
         .then(() => {
+          setFollowedVacations([...followedVacations]);
+          console.log(followedVacations);
+          console.log(isFollowedByUser(vacationId));
           notifyService.success("Vacation followed");
         })
         .catch((err) => notifyService.error(err));

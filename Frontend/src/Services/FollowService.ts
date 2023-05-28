@@ -39,10 +39,10 @@ class FollowService {
     
   }
 
-  public async unfollowVacation(toUnfollowId: number): Promise<void> {
-    await axios.delete(appConfig.followedUrl + toUnfollowId);
+  public async unfollowVacation(toUnfollowVacation: FollowersModel): Promise<void> {
+    await axios.delete(appConfig.followedUrl + toUnfollowVacation.vacationsId);
     // Add added vacation to global state
-    followersStore.dispatch({ type: FollowersActionType.UnfollowVacation, payload: toUnfollowId });
+    followersStore.dispatch({ type: FollowersActionType.UnfollowVacation, payload: toUnfollowVacation });
   }
 }
 

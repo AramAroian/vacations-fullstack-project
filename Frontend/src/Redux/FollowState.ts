@@ -27,15 +27,17 @@ export function followersReducer(currentState = new FollowersState(), action: Fo
             newState.followers = action.payload;
             break;
         case FollowersActionType.FollowVacation:
-            console.log(action.payload)
             newState.followers.push(action.payload)
+            console.log("Follow");
+            console.log(newState);
             break;
         case FollowersActionType.UnfollowVacation:
-            console.log(action.payload)
-            const indexToDelete = newState.followers.findIndex(f => f.vacationsId === action.payload);
+            const indexToDelete = newState.followers.findIndex(f => f.vacationsId === action.payload.vacationsId && f.usersId === action.payload.usersId);
             if (indexToDelete >= 0) {
                 newState.followers.splice(indexToDelete, 1);
             }
+            console.log("Unfollow");
+            console.log(newState);
             break;
     }
     return newState;
