@@ -122,8 +122,6 @@ function VacationsList(): JSX.Element {
         .unfollowVacation(vacationToUnfollow)
         .then(() => {
           setFollowedVacations([...followedVacations]);
-          console.log(followedVacations);
-          console.log(isFollowedByUser(vacationId));
           notifyService.success("Vacation unfollowed");
         })
         .catch((err) => notifyService.error(err));
@@ -132,8 +130,6 @@ function VacationsList(): JSX.Element {
         .followVacation(vacationId)
         .then(() => {
           setFollowedVacations([...followedVacations]);
-          console.log(followedVacations);
-          console.log(isFollowedByUser(vacationId));
           notifyService.success("Vacation followed");
         })
         .catch((err) => notifyService.error(err));
